@@ -38,3 +38,8 @@ func DBSelect(from, where string, fields ...string) string {
         return fmt.Sprintf(format, strings.Join(fields, ", "), from)
     }
 }
+
+func DBInsert(into string, fields, params []string) string {
+    var format string = "INSERT INTO %s (%s) VALUES (%s);"
+    return fmt.Sprintf(format, into, strings.Join(fields, ", "), strings.Join(params, ", "))
+}
