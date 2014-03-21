@@ -2,8 +2,9 @@ package models
 
 import (
     "database/sql"
-    "github.com/hope/connect"
-    "github.com/hope/utils"
+    "fmt"
+    "github.com/uas/connect"
+    "github.com/uas/utils"
 )
 
 type ModelManager struct{}
@@ -19,12 +20,21 @@ type Entity struct {
     TableName string
     Caption   string
     Fields    map[string]*Field
+    Columns   []string
 }
 
 func (this Entity) Select(where string, fields ...string) sql.Result {
     db := connect.DBConnect()
-    stmt := connect.DBSelect(this.TableName, where, fields...)
-    rows, err := db.Exec(stmt)
+    query := connect.DBSelect(this.TableName, where, fields...)
+    result, err := db.Exec(query)
     utils.HandleErr("[Select] Exec: ", err)
-    return rows
+    return result
+}
+
+func (this Entity) Insert(into string, fields []string, params []string) sql.Result {
+    db := connect.DBConnect()
+    query := connect.DBInsert(this.TableName, fields, params)
+    result, err := db.Exec(query)
+    utils.HandleErr("[Select] Exec: ", err)
+    return result
 }
