@@ -2,7 +2,6 @@ package models
 
 import (
     "database/sql"
-    "fmt"
     "github.com/uas/connect"
     "github.com/uas/utils"
 )
