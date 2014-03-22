@@ -1,6 +1,11 @@
-﻿define(["jquery"], function($) {
+define(["jquery", "utils"], function($, utils, cabinet) {
 
+    var id;
     var sid;
+
+    function getId() {
+        return id;
+    }
 
     function registerCallback(data) {
 
@@ -11,42 +16,47 @@
             serverAnswer.text("Сервер не отвечает.").css("color", "red");
 
         } else if (data.result === "ok") {
-            console.log("Регистрация прошла успешно.");
-            serverAnswer.text("Registration is successful.").css("color", "green");
+            serverAnswer.text("Регистрация прошла успешно.").css("color", "green");
+            jsonHandle("login", loginCallback)
 
         } else if (data.result === "loginExists") {
-            serverAnswer.text("Такой логин уже существует.");
+            serverAnswer.text("Такой логин уже существует.").css("color", "red");
+            $("#password").val("");
 
         } else if (data.result === "badLogin") {
             serverAnswer.text("Логин может содержать буквы и/или "
                 + "цифры и иметь длину от 2 до 36 символов.").css("color", "red");
+            $("#password").val("");
 
         } else if (data.result === "badPassword") {
             serverAnswer.text("Пароль должен иметь длину от 2 "
                 + "до 36 символов.").css("color", "red");
+            $("#password").val("");
         }
-    }
+    };
 
     function loginCallback(data) {
         if (data.result === "ok") {
             $("#server-answer").text("Авторизация прошла успешно.").css("color", "green");
-            $("#logoutBtn").css("visibility", "visible");
+            $("#logout-btn, #cabinet-btn").css("visibility", "visible");
+            $("#form-register").css("visibility", "hidden");
+            id = data.id;
             sid = data.sid;
 
         } else if (data.result === "invalidCredentials") {
             $("#server-answer").text("Неверный логин или пароль.").css("color", "red");
         }
-    }
+    };
 
     function logoutCallback(data) {
         if (data.result === "ok") {
-            $("#server-answer").text("Вы вышли.").css("color", "green");
-            $("#logoutBtn").css("visibility", "hidden");
+            $("#logout-btn, #cabinet-btn, #form-private, #title").css("visibility", "hidden");
+            $("#server-answer").text("Вы вышли.").css("color", "green").css("visibility", "visible");
 
         } else if (data.result === "badSid") {
             $("#server-answer").text("Invalid session ID.").css("color", "red");
         }
-    }
+    };
 
     function jsonHandle(action, callback) {
         if (action == "logout") {
@@ -60,34 +70,18 @@
                 "action": action,
                 "login": $("#username").val(),
                 "password": $("#password").val(),
-            }
+            };
         }
 
-        console.log(js);
-        $.ajax({
-            method: "post",
-            type: "post",
-            dataType: "json",
-            url: "/handler",
-            data: JSON.stringify(js),
-            ContentType: "application/json; charset=utf-8",
-            success: function(data) {
-                document.getElementById("form-register").reset();
-                $("#server-answer").empty();
-                callback(data);
-            },
-            error: function(ajaxRequest, ajaxOptions, thrownError) {
-                console.log(thrownError);
-            }
-        });
-
-    }
+        utils.postRequest(js, callback, "/handler");
+    };
 
     return {
+        getId: getId,
         registerCallback: registerCallback,
         loginCallback: loginCallback,
         logoutCallback: logoutCallback,
         jsonHandle: jsonHandle
-    }
+    };
 
 });
