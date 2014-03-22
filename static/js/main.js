@@ -1,16 +1,23 @@
-require(["jquery", "auth"], function($, auth) {
+require(["jquery", "auth", "utils", "cabinet"], function($, auth, utils, cabinet) {
 
-    $("#registerBtn").click(function() {
-        console.log("registerBtn");
+    $("#register-btn").click(function() {
         auth.jsonHandle("register", auth.registerCallback);
     });
 
-    $("#loginBtn").click(function() {
+    $("#login-btn").click(function() {
         auth.jsonHandle("login", auth.loginCallback);
     });
 
-    $("#logoutBtn").click(function() {
+    $("#logout-btn").click(function() {
         auth.jsonHandle("logout", auth.logoutCallback);
+    });
+
+    $("#cabinet-btn").click(function() {
+        var data = {
+            "action": "identification",
+            "id": auth.getId()
+        }
+        utils.postRequest(data, cabinet.drawCabinet, "/handler");
     });
 
 });
