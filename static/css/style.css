@@ -6,7 +6,7 @@ textarea
   font-family: "Verdana", Fallback, sans-serif;
 }
 
-html,body
+html, body
 {
   margin: 0;
   padding: 0;
@@ -18,9 +18,9 @@ label
   color: #444444;
   display: block;
   float: left;
-  font-size: 20px;
+  font-size: 18px;
   padding: 0;
-  width: 180px;
+  width: 170px;
 }
 
 .form-row
@@ -57,24 +57,21 @@ body
   overflow-y: scroll;
 }
 
-#form-register
+#form-register, #form-private
 {
   position: absolute;
   top: 0px;
   padding: 15px 1% 15px 1%;
-  margin: 35px 35px 35px 35px;
-  background: rgb(247, 247, 247) url(../img/b.jpg) repeat top left;
+  margin: 55px 35px 35px 35px;
+  width: 22%;
+  /*background: rgb(247, 247, 247) url(../img/b.jpg) repeat top left;*/
+  background:white;
   border: 1px solid rgba(147, 184, 189,0.8);
   box-shadow:
     0pt 2px 5px rgba(105, 108, 109,  0.7),
     0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
   border-radius: 5px;
  }
-
-#formregister
-{
-  z-index: 22;
-}
 
 #container
 {
@@ -123,11 +120,21 @@ body
   text-decoration: none;
 }
 
+#title
+{
+  text-align: left;
+  float: left;
+  display: block;
+  position: relative;
+  margin: 20px 0px 0px 35px;
+  font-size: 20px;
+}
+
 #server-answer
 {
   text-align: left;
   float: left;
   display: block;
   position: relative;
-  margin: 180px 0px 0px 35px;
+  margin: 25px 0px 0px 5px;
 }
