@@ -30,8 +30,10 @@ func (this *Handler) Index() {
     if data["action"] == "logout" {
         response = HandleLogout(data["sid"].(string))
     } else if data["action"] == "identification" {
-        id := data["id"].(string)
-        response = GetUserData(id)
+        response = GetUserData(data["id"].(string))
+    } else if data["action"] == "updateUser" {
+        userData := data["data"].(map[string]interface{})
+        response = UpdateUserData(data["id"].(string), userData)
         fmt.Println(response)
     } else {
         login, password := data["login"].(string), data["password"].(string)
