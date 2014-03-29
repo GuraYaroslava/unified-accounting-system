@@ -9,27 +9,24 @@ define(["jquery", "utils"], function($, utils, cabinet) {
 
     function registerCallback(data) {
 
-        var serverAnswer = $("#server-answer");
-
-        if (data == null)
-        {
-            serverAnswer.text("Сервер не отвечает.").css("color", "red");
+        if (data == null) {
+            $("#server-answer").text("Сервер не отвечает.").css("color", "red");
 
         } else if (data.result === "ok") {
-            serverAnswer.text("Регистрация прошла успешно.").css("color", "green");
-            jsonHandle("login", loginCallback)
+            $("#server-answer").text("Регистрация прошла успешно.").css("color", "green");
+            jsonHandle("login", loginCallback);
 
         } else if (data.result === "loginExists") {
-            serverAnswer.text("Такой логин уже существует.").css("color", "red");
+            $("#server-answer").text("Такой логин уже существует.").css("color", "red");
             $("#password").val("");
 
         } else if (data.result === "badLogin") {
-            serverAnswer.text("Логин может содержать буквы и/или "
+            $("#server-answer").text("Логин может содержать буквы и/или "
                 + "цифры и иметь длину от 2 до 36 символов.").css("color", "red");
             $("#password").val("");
 
         } else if (data.result === "badPassword") {
-            serverAnswer.text("Пароль должен иметь длину от 2 "
+            $("#server-answer").text("Пароль должен иметь длину от 2 "
                 + "до 36 символов.").css("color", "red");
             $("#password").val("");
         }
@@ -52,7 +49,7 @@ define(["jquery", "utils"], function($, utils, cabinet) {
         if (data.result === "ok") {
             $("#logout-btn, #cabinet-btn, #form-private, #title").css("visibility", "hidden");
             $("#server-answer").text("Вы вышли.").css("color", "green").css("visibility", "visible");
-
+            $("#form-register").css("visibility", "visible");
         } else if (data.result === "badSid") {
             $("#server-answer").text("Invalid session ID.").css("color", "red");
         }
