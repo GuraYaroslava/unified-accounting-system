@@ -5,7 +5,6 @@ import (
     "encoding/json"
     "github.com/nu7hatch/gouuid"
     "github.com/uas/connect"
-    "github.com/uas/models"
     "github.com/uas/utils"
     "regexp"
     "strconv"
@@ -45,25 +44,12 @@ func HandleRegister(login string, password string) string {
     } else if !MatchRegexp("^.{6,36}$", password) && !passHasInvalidChars {
         result["result"] = "badPassword"
     } else {
-        var (
-            baseModel *models.ModelManager
-            data      = baseModel.Users()
-            params    = make([]string, len(data.Columns)-1)
-            k         = 1
-        )
-        for i := 1; i < len(data.Columns); i++ {
-            if data.Columns[i] == "login" {
-                params[i-1] = "$" + strconv.Itoa(k)
-                k++
-            } else {
-                params[i-1] = "''"
-            }
-        }
         db := connect.DBConnect()
-        query, err := db.Prepare(connect.DBInsert("users", data.Columns[1:], params))
+        query := connect.DBInsert("users", []string{"login", "password"})
+        stmt, err := db.Prepare(query)
         utils.HandleErr("[HandleRegister] Prepare error :", err)
-        defer query.Close()
-        _, err = query.Exec(login)
+        defer stmt.Close()
+        _, err = stmt.Exec(login, password)
         utils.HandleErr("[HandleRegister] Query error :", err)
     }
     response, err := json.Marshal(result)
@@ -77,12 +63,12 @@ func HandleLogin(login, password string) string {
     if isExist {
         db := connect.DBConnect()
         u4, _ := uuid.NewV4()
-        query := connect.DBInsert("sessions", []string{"login", "sid"}, []string{"$1", "$2"})
+        query := connect.DBUpdate("users", []string{"sid"}, "id = $2")
         stmt, err := db.Prepare(query)
         utils.HandleErr("[HandleLogin] Prepare: ", err)
         defer connect.DBClose(db, stmt)
-        _, err = stmt.Exec(login, u4.String())
-        utils.HandleErr("[HandleLogin] Insert into sessions: ", err)
+        _, err = stmt.Exec(u4.String(), id)
+        utils.HandleErr("[HandleLogin] Update sid: ", err)
         result["id"] = id
         result["sid"] = u4.String()
         result["result"] = "ok"
@@ -95,10 +81,11 @@ func HandleLogin(login, password string) string {
 func HandleLogout(u4 string) string {
     result := map[string]string{"result": "ok"}
     db := connect.DBConnect()
-    stmt, err := db.Prepare("DELETE FROM sessions WHERE sid = $1")
+    query := connect.DBUpdate("users", []string{"sid"}, "sid = $2")
+    stmt, err := db.Prepare(query)
     utils.HandleErr("[HandleLogout] Prepare: ", err)
+    rows, err := stmt.Exec("", u4)
     defer connect.DBClose(db, stmt)
-    rows, err := stmt.Exec(u4)
     utils.HandleErr("[HandleLogout] Prepare: ", err)
     if amount, _ := rows.RowsAffected(); amount != 1 {
         result["result"] = "badSid"
