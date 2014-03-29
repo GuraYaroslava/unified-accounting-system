@@ -32,7 +32,7 @@ func (this Entity) Select(where string, fields ...string) sql.Result {
 
 func (this Entity) Insert(into string, fields []string, params []string) sql.Result {
     db := connect.DBConnect()
-    query := connect.DBInsert(this.TableName, fields, params)
+    query := connect.DBInsert(this.TableName, fields)
     result, err := db.Exec(query)
     utils.HandleErr("[Select] Exec: ", err)
     return result
