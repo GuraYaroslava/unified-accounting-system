@@ -19,3 +19,9 @@ CREATE TABLE IF NOT EXISTS users (
     phone     varchar(32)  NOT NULL DEFAULT '',
     address   varchar(32)  NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS contests (
+    id        serial       NOT NULL PRIMARY KEY,
+    name      varchar(128) NOT NULL UNIQUE,
+    date      date         NOT NULL
+);

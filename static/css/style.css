@@ -11,6 +11,7 @@ html, body
   margin: 0;
   padding: 0;
   height: 100%;
+  font-size: 80%;
 }
 
 label
@@ -136,5 +137,5 @@ body
   float: left;
   display: block;
   position: relative;
-  margin: 25px 0px 0px 5px;
+  margin: 25px 0px 0px 0px;
 }

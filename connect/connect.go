@@ -31,10 +31,10 @@ func DBClose(comps ...DBComps) {
     }
 }
 
-func DBSelect(from, where string, fields ...string) string {
+func DBSelect(from string, where []string, fields ...string) string {
     var format string = "SELECT %s FROM %s"
-    if where != "" {
-        return fmt.Sprintf(format+" WHERE %s", strings.Join(fields, ", "), from, where)
+    if len(where) > 0 {
+        return fmt.Sprintf(format+" WHERE %s", strings.Join(fields, ", "), from, strings.Join(MakePair(where), ", "))
     } else {
         return fmt.Sprintf(format, strings.Join(fields, ", "), from)
     }
@@ -42,7 +42,7 @@ func DBSelect(from, where string, fields ...string) string {
 
 func DBInsert(into string, fields []string) string {
     var format string = "INSERT INTO %s (%s) VALUES (%s);"
-    return fmt.Sprintf(format, into, strings.Join(fields, ", "), strings.Join(MakeParams(fields), ", "))
+    return fmt.Sprintf(format, into, strings.Join(fields, ", "), strings.Join(MakeParams(len(fields)), ", "))
 }
 
 func DBUpdate(table string, fields []string, where string) string {
@@ -50,9 +50,14 @@ func DBUpdate(table string, fields []string, where string) string {
     return fmt.Sprintf(format, table, strings.Join(MakePair(fields), ", "), where)
 }
 
-func MakeParams(fields []string) []string {
-    var result = make([]string, len(fields))
-    for i := 0; i < len(fields); i++ {
+func DBDelete(table string, field string, params []interface{}) string {
+    var format string = "DELETE FROM %s WHERE %s IN (%s)"
+    return fmt.Sprintf(format, table, field, strings.Join(MakeParams(len(params)), ", "))
+}
+
+func MakeParams(n int) []string {
+    var result = make([]string, n)
+    for i := 0; i < n; i++ {
         result[i] = "$" + strconv.Itoa(i+1)
     }
     return result

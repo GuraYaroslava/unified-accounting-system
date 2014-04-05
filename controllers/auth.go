@@ -17,9 +17,9 @@ func MatchRegexp(pattern, str string) bool {
 
 func IsExist(login string) (bool, string) {
     db := connect.DBConnect()
-    var where string = "login = $1"
+    //var where string = "login = $1"
     var id string
-    query := connect.DBSelect("users", where, "id")
+    query := connect.DBSelect("users", []string{"login"}, "id")
     stmt, err := db.Prepare(query)
     utils.HandleErr("[IsExist] Prepare: ", err)
     defer connect.DBClose(db, stmt)

@@ -1,0 +1,130 @@
+﻿{{define "card"}}
+{{template "header"}}
+
+<div id="container">
+    <div id="title"></div>
+    <div id="cabinet">
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+        var data = {};
+</script>
+
+{{with .Table}}
+    {{range $index, $elmt := .}}
+        {{range $i, $v := $elmt}}
+            <script type="text/javascript">
+                    data["{{$i}}"]= "{{$v}}";
+            </script>
+        {{end}}
+    {{end}}
+{{end}}
+
+<script type="text/javascript">
+    var colNames  = "{{.ColNames}}".slice(4, -1).split(" ");
+    if (data != null) {
+        $("#title").text("Личный кабинет");
+        $("#logout-btn").css("visibility", "visible");
+        $("#cabinet").empty();
+
+        $("<form/>", {
+            id: "form-private"
+        }).appendTo("#cabinet");
+
+        if (data["id"] == 1) {
+            $("<p/>", {}).append(
+                $("<input/>", {
+                    type: "button",
+                    value: "Мероприятия",
+                    id: "table-contests-btn",
+                    name: "submit",
+                })
+            ).appendTo("#form-private");
+
+            $("#table-contests-btn").click(function() {
+                location.href = "/handler/select/Contests";
+            });
+
+            $("<p/>", {}).append(
+                $("<input/>", {
+                    type: "button",
+                    value: "Пользователи",
+                    id: "table-users-btn",
+                    name: "submit",
+                })
+            ).appendTo("#form-private");
+            
+            $("#table-users-btn").click(function() {
+                location.href = "/handler/select/Users";
+            });
+
+            /*$("<p/>", {}).append(
+                $("<input/>", {
+                    type: "button",
+                    value: "Команды",
+                    id: "table-teams-btn",
+                    name: "submit",
+                })
+            ).appendTo("#form-private");*/
+        } else {
+            var j = 0;
+            for (var i in data) {
+                if (i == "id") {
+                    continue;
+                }
+
+                var div = $("<div/>", {
+                    class: "form-row"
+                });
+
+                var lable = $("<label/>", {
+                    for: i,
+                    id: "label-" + i
+                });
+
+                var input = $("<input/>", {
+                    id: i,
+                    name: i,
+                    type: "text"
+                });
+
+                $(input).val(data[i]);
+                $(div).append(lable).append(input);
+                $("#form-private").append(div);
+                $("#label-" + i).text(colNames[j]);
+                j++;
+            }
+
+            var input = $("<input/>", {
+                type: "button",
+                value: "Сохранить изменения",
+                id: "save-btn",
+                name: "submit",
+            }).appendTo("#form-private");
+
+            $("#save-btn").click(function() {
+                var data = {
+                    "action": "updateUser",
+                    //"id": auth.getId(),
+                    //"sid": auth.getSid(),
+                    "data": getPersonData(data)
+                };
+                //utils.postRequest(data, updateCallback, "/handler");
+            });
+        }
+    }
+
+    function getPersonData(data) {
+        var userData = {};
+        for (var i in data) {
+            userData[i] = $("#" + i).val();
+        }
+        return userData;
+    };
+
+</script>
+
+{{template "footer"}}
+{{end}}

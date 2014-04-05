@@ -1,10 +1,11 @@
 package router
 
 import (
+    "fmt"
     "github.com/uas/controllers"
     "net/http"
     "reflect"
-    "strconv"
+    //"strconv"
     "strings"
 )
 
@@ -35,8 +36,12 @@ func (this FastCGIServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         cMethod := FindMethod(cType, methodName)
         if cMethod != nil {
             params := PopulateParams(*cMethod, parts)
-            params[0] = *controller
-            cMethod.Func.Call(params)
+            allParams := make([]reflect.Value, len(params)+1)
+            allParams[0] = *controller
+            for i := 0; i < len(params); i++ {
+                allParams[i+1] = params[i]
+            }
+            cMethod.Func.Call(allParams)
         } else {
             http.Error(w, "Unable to locate index method in controller.", http.StatusMethodNotAllowed)
         }
@@ -73,28 +78,33 @@ func FindMethod(cType reflect.Type, methodName string) *reflect.Method {
 }
 
 func PopulateParams(method reflect.Method, parts []string) []reflect.Value {
-    numParams := method.Type.NumIn()
+    numParams := method.Type.NumIn() - 1
+    //fmt.Println("name: ", method.Name)
     params := make([]reflect.Value, numParams)
-    for x := 3; x < numParams; x++ {
-        it := method.Type.In(x)
-        itk := it.Kind()
-        if len(parts) > (x) {
-            if itk == reflect.String {
-                params[x] = reflect.ValueOf(parts[x])
-            } else if itk == reflect.Int {
-                intval, err := strconv.Atoi(parts[x])
-                if err != nil {
-                    intval = -1
-                }
-                params[x] = reflect.ValueOf(intval)
-            }
+    //fmt.Println("num params: ", numParams)
+    for x := 0; x < numParams; x++ {
+        //it := method.Type.In(x)
+        //itk := it.Kind()
+        if len(parts) > (x + 3) {
+            //fmt.Println("p: ", parts[x+3])
+            fmt.Printf("\n%s: type= %s\n", parts[x+3], reflect.TypeOf(parts[x+3]))
+            //if itk == reflect.String {
+            params[x] = reflect.ValueOf(parts[x+3])
+            //} else if itk == reflect.Int {
+            //intval, err := strconv.Atoi(parts[x+3])
+            //if err != nil {
+            //    intval = -1
+            //}
+            //params[x] = reflect.ValueOf(intval)
+            //}
         } else {
-            if itk == reflect.String {
+            //if itk == reflect.String {
                 params[x] = reflect.ValueOf("")
-            } else if itk == reflect.Int {
-                params[x] = reflect.ValueOf(-1)
-            }
+            //} else if itk == reflect.Int {
+            //    params[x] = reflect.ValueOf(-1)
+            //}
         }
     }
+    fmt.Println("answer params: ", params)
     return params
 }
