@@ -1,4 +1,4 @@
-require(["jquery", "auth", "utils", "user"], function($, auth, utils, user) {
+require(["auth", "utils"], function(auth, utils) {
 
     $("#register-btn").click(function() {
         auth.jsonHandle("register", auth.registerCallback);
@@ -13,11 +13,8 @@ require(["jquery", "auth", "utils", "user"], function($, auth, utils, user) {
     });
 
     $("#cabinet-btn").click(function() {
-        var data = {
-            "action": "identification",
-            "id": auth.getId()
-        }
-        utils.postRequest(data, user.drawCabinet, "/handler");
+        //utils.postRequest(data, user.drawCabinet, "/handler/selectById/Users/" + auth.getId());
+        location.href = "/handler/selectById/Users/" + auth.getId();
     });
 
 });

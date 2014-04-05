@@ -1,10 +1,15 @@
-define(["jquery", "utils"], function($, utils, cabinet) {
+define(["utils"], 
+function(utils) {
 
     var id;
     var sid;
 
     function getId() {
         return id;
+    }
+
+    function getSid() {
+        return sid;
     }
 
     function registerCallback(data) {
@@ -48,6 +53,7 @@ define(["jquery", "utils"], function($, utils, cabinet) {
     function logoutCallback(data) {
         if (data.result === "ok") {
             $("#logout-btn, #cabinet-btn, #form-private, #title").css("visibility", "hidden");
+            $("#password").val("");
             $("#server-answer").text("Вы вышли.").css("color", "green").css("visibility", "visible");
             $("#form-register").css("visibility", "visible");
         } else if (data.result === "badSid") {
@@ -75,6 +81,7 @@ define(["jquery", "utils"], function($, utils, cabinet) {
 
     return {
         getId: getId,
+        getSid: getSid,
         registerCallback: registerCallback,
         loginCallback: loginCallback,
         logoutCallback: logoutCallback,

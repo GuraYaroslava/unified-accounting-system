@@ -1,4 +1,4 @@
-define(["jquery"], function($) {
+define(function() {
 
     function postRequest(data, callback, url) {
         $.ajax({
