@@ -6,6 +6,7 @@ import (
     "github.com/uas/utils"
     "strings"
     "text/template"
+    "time"
 )
 
 type Model struct {
@@ -16,33 +17,58 @@ type Model struct {
     Caption   string
 }
 
-func (this *Handler) SelectById(tableName, id string) {
-    fmt.Println("SelectById: ", tableName)
+func (this *Handler) SelectById(tableName string) {
+    sess := this.Session.SessionStart(this.Response, this.Request)
+    createTime := sess.Get("createTime")
+    life := this.Session.Maxlifetime
+    id := sess.Get("id")
+    if createTime == nil ||
+        createTime.(int64)+life < time.Now().Unix() {
+        tmp, err := template.ParseFiles("view/index.html", "view/header.html", "view/footer.html")
+        utils.HandleErr("[handler.select] ParseFiles: ", err)
+        err = tmp.ExecuteTemplate(this.Response, "index", nil)
+        utils.HandleErr("[handler.select] ExecuteTemplate: ", err)
+        return
+
+    } else {
+        this.Session.GC()
+    }
     base := new(models.ModelManager)
     var answer []interface{}
     switch tableName {
     case "Users":
         model := base.Users()
         answer = model.Select(map[string]interface{}{"id": id}, model.UserColumns...)
-        //answer = append(answer, map[string]interface{}{"columns": model.UserColumns})
-        //answer = append(answer, map[string]interface{}{"colNames": model.UserColNames})
-        tmp, err := template.ParseFiles("../uas/view/card.html", "../uas/view/header.html", "../uas/view/footer.html")
+        tmp, err := template.ParseFiles(
+            "../uas/view/card.html",
+            "../uas/view/header.html",
+            "../uas/view/footer.html")
         utils.HandleErr("[Handler.SelectById] template.ParseFiles: ", err)
-        err = tmp.ExecuteTemplate(this.Response, "card", Model{Table: answer, ColNames: model.UserColNames})
+        err = tmp.ExecuteTemplate(this.Response, "card", Model{
+            Table:    answer,
+            ColNames: model.UserColNames,
+            Columns:  model.UserColumns})
         utils.HandleErr("[Handler.SelectById] tmp.Execute: ", err)
         break
-        /*case "Contests":
-        model := base.Contests()
-        answer = model.Select(map[string]interface{}{"id": id}, model.Columns...)
-        break*/
     }
-    /*response, err := json.Marshal(answer)
-    utils.HandleErr("[GetUserData] json.Marshal: ", err)
-    fmt.Fprintf(this.Response, "%s", string(response))*/
 }
 
 func (this *Handler) Select(tableName string) {
-    fmt.Println("Select: ", tableName)
+    sess := this.Session.SessionStart(this.Response, this.Request)
+    createTime := sess.Get("createTime")
+    life := this.Session.Maxlifetime
+    if createTime == nil || createTime.(int64)+life < time.Now().Unix() {
+        tmp, err := template.ParseFiles(
+            "view/index.html",
+            "view/header.html",
+            "view/footer.html")
+        utils.HandleErr("[handler.select] ParseFiles: ", err)
+        err = tmp.ExecuteTemplate(this.Response, "index", nil)
+        utils.HandleErr("[handler.select] ExecuteTemplate: ", err)
+        return
+    } else {
+        this.Session.GC()
+    }
     base := new(models.ModelManager)
     var model models.Entity
     switch tableName {
@@ -54,14 +80,21 @@ func (this *Handler) Select(tableName string) {
         break
     }
     answer := model.Select(nil, model.Columns...)
-    tmp, err := template.ParseFiles("../uas/view/table.html", "../uas/view/header.html", "../uas/view/footer.html")
+    tmp, err := template.ParseFiles(
+        "../uas/view/table.html",
+        "../uas/view/header.html",
+        "../uas/view/footer.html")
     utils.HandleErr("[Handler.Select] template.ParseFiles: ", err)
-    err = tmp.ExecuteTemplate(this.Response, "edit", Model{Table: answer, TableName: model.TableName, ColNames: model.ColNames, Columns: model.Columns, Caption: model.Caption})
+    err = tmp.ExecuteTemplate(this.Response, "edit", Model{
+        Table:     answer,
+        TableName: model.TableName,
+        ColNames:  model.ColNames,
+        Columns:   model.Columns,
+        Caption:   model.Caption})
     utils.HandleErr("[Handler.Select] tmp.Execute: ", err)
 }
 
 func (this *Handler) Edit(tableName string) {
-    fmt.Println("Edit: ", tableName)
     oper := this.Request.FormValue("oper")
     base := new(models.ModelManager)
     var model models.Entity

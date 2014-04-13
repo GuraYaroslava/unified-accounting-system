@@ -1,11 +1,10 @@
 package router
 
 import (
-    "fmt"
     "github.com/uas/controllers"
+    "github.com/uas/session"
     "net/http"
     "reflect"
-    //"strconv"
     "strings"
 )
 
@@ -29,9 +28,11 @@ func (this FastCGIServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
         }
     }
     controller := FindController(controllerName)
+    s, _ := session.NewManager(controllerName, 360)
     if controller != nil {
         controller.Elem().FieldByName("Request").Set(reflect.ValueOf(r))
         controller.Elem().FieldByName("Response").Set(reflect.ValueOf(w))
+        controller.Elem().FieldByName("Session").Set(reflect.ValueOf(s))
         cType := controller.Type()
         cMethod := FindMethod(cType, methodName)
         if cMethod != nil {
@@ -87,7 +88,7 @@ func PopulateParams(method reflect.Method, parts []string) []reflect.Value {
         //itk := it.Kind()
         if len(parts) > (x + 3) {
             //fmt.Println("p: ", parts[x+3])
-            fmt.Printf("\n%s: type= %s\n", parts[x+3], reflect.TypeOf(parts[x+3]))
+            //fmt.Printf("\n%s: type= %s\n", parts[x+3], reflect.TypeOf(parts[x+3]))
             //if itk == reflect.String {
             params[x] = reflect.ValueOf(parts[x+3])
             //} else if itk == reflect.Int {
@@ -99,12 +100,12 @@ func PopulateParams(method reflect.Method, parts []string) []reflect.Value {
             //}
         } else {
             //if itk == reflect.String {
-                params[x] = reflect.ValueOf("")
+            params[x] = reflect.ValueOf("")
             //} else if itk == reflect.Int {
             //    params[x] = reflect.ValueOf(-1)
             //}
         }
     }
-    fmt.Println("answer params: ", params)
+    //fmt.Println("answer params: ", params)
     return params
 }

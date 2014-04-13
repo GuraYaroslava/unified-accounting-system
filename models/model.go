@@ -35,7 +35,6 @@ func (this Entity) Select(where map[string]interface{}, fields ...string) []inte
     }
     db := connect.DBConnect()
     query := connect.DBSelect(this.TableName, keys, fields...)
-    fmt.Println(query)
     stmt, err := db.Prepare(query)
     utils.HandleErr("[Entity.Select] Prepare: ", err)
     defer connect.DBClose(db, stmt)
@@ -88,7 +87,6 @@ func (this Entity) Select(where map[string]interface{}, fields ...string) []inte
         }
         j++
     }
-    fmt.Println(answer)
     return answer
 }
 
@@ -116,7 +114,6 @@ func (this Entity) Update(fields []string, params []interface{}, where string) {
 func (this Entity) Delete(field string, params []interface{}) {
     db := connect.DBConnect()
     query := connect.DBDelete(this.TableName, field, params)
-    fmt.Println("Delete: ", query)
     stmt, err := db.Prepare(query)
     utils.HandleErr("[Entity.Delete] Prepare: ", err)
     defer connect.DBClose(db, stmt)
