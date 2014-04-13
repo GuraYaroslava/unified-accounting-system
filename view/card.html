@@ -2,10 +2,9 @@
 {{template "header"}}
 
 <div id="container">
-    <div id="title"></div>
-    <div id="cabinet">
-    </div>
-    
+    <div id="title" class="left"></div>
+    <div id="server-answer" class="right" style="margin-right: -10px"></div>
+    <div id="cabinet" class="left"></div>
 </div>
 
 <script type="text/javascript">
@@ -23,14 +22,19 @@
 {{end}}
 
 <script type="text/javascript">
-    var colNames  = "{{.ColNames}}".slice(4, -1).split(" ");
+require(["utils"],
+function(utils) {
+    var colNames  = "{{.ColNames}}".slice(1, -1).split(" ");
+    var columns  = "{{.Columns}}".slice(1, -1).split(" ");
+
     if (data != null) {
         $("#title").text("Личный кабинет");
-        $("#logout-btn").css("visibility", "visible");
+        $("#logout-btn, #cabinet-btn").css("visibility", "visible");
         $("#cabinet").empty();
 
         $("<form/>", {
-            id: "form-private"
+            id: "form-private",
+            class: "left"
         }).appendTo("#cabinet");
 
         if (data["id"] == 1) {
@@ -60,40 +64,41 @@
                 location.href = "/handler/select/Users";
             });
 
-            /*$("<p/>", {}).append(
+            $("<p/>", {}).append(
                 $("<input/>", {
                     type: "button",
-                    value: "Команды",
-                    id: "table-teams-btn",
+                    value: "Анкеты",
+                    id: "table-blanks-btn",
                     name: "submit",
                 })
-            ).appendTo("#form-private");*/
+            ).appendTo("#form-private");
+
         } else {
             var j = 0;
             for (var i in data) {
-                if (i == "id") {
+                if (columns[j] == "id") {
+                    j++;
                     continue;
                 }
-
                 var div = $("<div/>", {
                     class: "form-row"
                 });
 
                 var lable = $("<label/>", {
-                    for: i,
-                    id: "label-" + i
+                    for: columns[j],
+                    id: "label-" + columns[j]
                 });
 
                 var input = $("<input/>", {
-                    id: i,
-                    name: i,
+                    id: columns[j],
+                    name: columns[j],
                     type: "text"
                 });
 
-                $(input).val(data[i]);
+                $(input).val(data[columns[j]]);
                 $(div).append(lable).append(input);
                 $("#form-private").append(div);
-                $("#label-" + i).text(colNames[j]);
+                $("#label-" + columns[j]).text(colNames[j]);
                 j++;
             }
 
@@ -105,25 +110,47 @@
             }).appendTo("#form-private");
 
             $("#save-btn").click(function() {
-                var data = {
-                    "action": "updateUser",
-                    //"id": auth.getId(),
-                    //"sid": auth.getSid(),
-                    "data": getPersonData(data)
+                var js = {
+                    "action": "update",
+                    "table": "Users",
+                    "data": getPersonData(data),
+                    "id": data["id"]
                 };
-                //utils.postRequest(data, updateCallback, "/handler");
+                utils.postRequest(js, function(data) {
+                    $("#cabinet").css("visibility", "hidden");
+                    $("#server-answer").text("Изменения сохранены.").css("color", "green");
+                }, "/handler")
+            });
+
+            $("<input/>", {
+                type: "button",
+                value: "Назад",
+                id: "back-btn",
+                name: "submit",
+            }).appendTo("#cabinet");
+
+            $("#back-btn").click(function() {
+                history.back();
             });
         }
     }
 
     function getPersonData(data) {
-        var userData = {};
+        var result = {};
+        var userData = []; 
+        var fields = [];
+        var j = 0;
         for (var i in data) {
-            userData[i] = $("#" + i).val();
+            if (i == "id") continue;
+            userData.push($("#" + i).val());
+            fields.push(i);
+            j++;
         }
-        return userData;
+        result["userData"] = userData;
+        result["fields"] = fields;
+        return result;
     };
-
+})
 </script>
 
 {{template "footer"}}

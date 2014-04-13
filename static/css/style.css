@@ -26,8 +26,8 @@ label
 
 .form-row
 {
-  display: block;
   margin-bottom: 15px;
+  display: block;
 }
 
 h1, form
@@ -35,13 +35,48 @@ h1, form
   font-family: Cambria, Helvetica, Arial, sans-serif;
 }
 
-.div-top
+/*---------------------------------------------------------------------------*/
+#content-top
 {
-  padding: 0px -35px 0px 0px;
+  width: 100%;
+  font-size: 11px;
+  text-transform: uppercase;
+  z-index: 9999;
+  box-shadow: 1px 0px 2px rgba(0,0,0,0.2);
+  display: block;
+}
+
+.div-top-left
+{
+  padding: 0px 0px 0px 0px;
   margin: 0px 0px 0px 0px;
+  width: 50%;
+  float: left;
+  display: block;
+}
+
+.div-top-right
+{
+  padding: 0px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
+  width: 50%;
   float: right;
   display: block;
 }
+/*---------------------------------------------------------------------------*/
+
+.left
+{
+  float: left;
+  display: block;
+}
+
+.right
+{
+  float: right;
+  display: block;
+}
+/*---------------------------------------------------------------------------*/
 
 * html body
 {
@@ -58,84 +93,48 @@ body
   overflow-y: scroll;
 }
 
-#form-register, #form-private
+#form-register, #form-private, #blank
 {
-  position: absolute;
-  top: 0px;
   padding: 15px 1% 15px 1%;
-  margin: 55px 35px 35px 35px;
-  width: 22%;
-  /*background: rgb(247, 247, 247) url(../img/b.jpg) repeat top left;*/
-  background:white;
+  margin: 5px 5px 5px 5px;/
+  background: rgb(247, 247, 247) url(../img/b.jpg) repeat top left;
+  background: white;
+  border-radius: 5px;
   border: 1px solid rgba(147, 184, 189,0.8);
   box-shadow:
     0pt 2px 5px rgba(105, 108, 109,  0.7),
     0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
-  border-radius: 5px;
  }
+
+#form-register, #form-private, #title, #back-btn, #list-contests
+{
+  margin: 10px 10px 10px 10px;
+}
+
+#form-register
+{
+  float: right;
+  margin: 0px 0px 0px 0px;
+}
 
 #container
 {
-  width: 100%;
   height: 100%;
-  position: relative;
 }
 
-#content-top
+#list-contests, #title, #container, #content, #server-answer
 {
-  line-height: 24px;
-  font-size: 11px;
-  background: rgba(255, 255, 255, 0.4);
-  text-transform: uppercase;
-  z-index: 9999;
-  position: relative;
-  box-shadow: 1px 0px 2px rgba(0,0,0,0.2);
-}
-
-#content-top a
-{
-  padding: 0px 35px;
-  letter-spacing: 1px;
-  color: #333;
-  text-shadow: 0px 1px 1px #fff;
-}
-
-#content-top a:hover
-{
-  background: #fff;
-}
-
-#content-top span.right
-{
-  float: right;
-}
-
-#content-top span.right a
-{
-  float: left;
-  display: block;
-}
-
-#content-top a
-{
-  text-decoration: none;
+  width: 100%;
 }
 
 #title
 {
   text-align: left;
-  float: left;
-  display: block;
   position: relative;
-  margin: 20px 0px 0px 35px;
   font-size: 20px;
 }
 
 #server-answer
 {
   text-align: left;
-  float: left;
-  display: block;
-  position: relative;
-  margin: 25px 0px 0px 0px;
 }

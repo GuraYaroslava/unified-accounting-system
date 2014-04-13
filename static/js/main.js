@@ -1,4 +1,17 @@
-require(["auth", "utils"], function(auth, utils) {
+require(["auth", "utils"],
+function(auth, utils) {
+
+    $(document).ready(function() {
+        utils.postRequest(
+            {
+                "action": "select",
+                "table": "Contests",
+                "fields": ["id", "name"]
+            },
+            listSubjects,
+            "/handler"
+        )
+    });
 
     $("#register-btn").click(function() {
         auth.jsonHandle("register", auth.registerCallback);
@@ -13,8 +26,21 @@ require(["auth", "utils"], function(auth, utils) {
     });
 
     $("#cabinet-btn").click(function() {
-        //utils.postRequest(data, user.drawCabinet, "/handler/selectById/Users/" + auth.getId());
-        location.href = "/handler/selectById/Users/" + auth.getId();
+        location.href = "/handler/selectById/Users/";
     });
+
+    $("#home-btn").click(function() {
+        location.href = "/";
+    });
+
+    function listSubjects(data) {
+        for (i in data) {
+            $("<a/>", {
+                text: data[i].name,
+                href: "/"//+data[i].id,
+                class: "form-row",
+            }).appendTo("div#list-contests");
+        }
+    }
 
 });

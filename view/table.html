@@ -2,15 +2,16 @@
 {{template "header"}}
 
 <div id="container">
-	<table id="table-users"></table>
-	<div id="table-pager-users"></div>
+    <table id="grid-table"></table>
+    <div id="grid-table-pager"></div>
 </div>
 
 <script type="text/javascript">
-		$("#logout-btn").css("visibility", "visible");
-        var jsData    = "["
-        var colNames_ = "{{.ColNames}}".slice(1, -1).split(" ");
-        var colModel_ = [];
+    $("#logout-btn").css("visibility", "visible");
+    var jsData    = "["
+    var colNames_ = "{{.ColNames}}".slice(1, -1).split(" ");
+    var tableName = "{{.TableName}}";
+    var colModel_ = [];
 </script>
 
 <!-- colModel_ init -->
@@ -21,7 +22,7 @@
             function datePicker(e) {$(e).datepicker({"dateFormat":"yy-mm-dd"});}
             data["name"] = "{{$v}}";
             data["index"] = "{{$v}}";
-            if ("{{$v}}" == "id" || "{{$v}}" == "login") {
+            if ("{{$v}}" == "id") {
                 data["editable"] = false;
             } else if ("{{$v}}" == "date") {
                 data["editoptions"] = {dataInit: datePicker}
@@ -57,15 +58,16 @@
 {{end}}
 
 <script type="text/javascript">
+    var id_;
     $(document).ready(function() {
-        $("#table-users").jqGrid({
+        $("#grid-table").jqGrid({
             data:           JSON.parse(jsData),
             datatype:       "local",
             mtype:          "POST",
             treeGrid:       false,
             colNames:       colNames_,
             colModel:       colModel_,
-            pager:          $("#table-pager-users"),
+            pager:          $("#grid-table-pager"),
             width:          1000,
             height:         "100%",
             rowNum:         10,
@@ -77,18 +79,20 @@
             hoverrows:      true,
             multiselect:    true,
             ondblClickRow:  function(id) {
-                                $("#table-users").restoreRow(id);
-                                $("#table-users").editRow(id, true);
+                                id_ = id;
+                                $("#grid-table").restoreRow(id);
+                                $("#grid-table").editRow(id, true);
                             },
             editurl:        "/handler/edit/" + "{{.TableName}}"
         });
 
-        $("#table-users").navGrid(
-            "#table-pager-users",
+        $("#grid-table").navGrid(
+            "#grid-table-pager",
             {
                 edit:   true,    edittext:   "Редактировать",
                 add:    true,    addtext:    "Создать",
                 del:    true,    deltext:    "Удалить",
+                refresh: false,
                 view:   false,
                 search: false
             },
@@ -119,7 +123,38 @@
             }
         );
 
-        $("#table-users").jqGrid(
+        if (tableName == "Contests") {
+            $("#grid-table").jqGrid (
+                "navButtonAdd",
+                "#grid-table-pager",
+                {
+                    caption: "Анкета", buttonicon: "ui-icon-script", title: "",
+                    onClickButton: function() {
+                        alert(id_);
+                        dada(id_);
+                    }
+                }
+            );
+        }
+
+        $("#grid-table").jqGrid (
+            "navButtonAdd",
+            "#grid-table-pager",
+            {
+                caption: "", buttonicon: "ui-icon-calculator", title: "choose columns",
+                onClickButton: function() {
+                    $("#grid-table").jqGrid("columnChooser", {
+                        done: function(perm) {
+                            if (perm) {
+                                $("#grid-table").jqGrid("remapColumns", perm, true);
+                            }
+                        }
+                    });
+                }
+            }
+        );
+
+        $("#grid-table").jqGrid(
             "filterToolbar",
             {
                 stringResult:    true,
@@ -128,20 +163,25 @@
             }
         );
 
-		$("<p/>", {}).append(
-			$("<input/>", {
-				type: "button",
-				value: "Назад",
-				id: "back-btn",
-				name: "submit",
-			})
-		).appendTo("#container");
+        $("<p/>", {}).append(
+            $("<input/>", {
+                type: "button",
+                value: "Назад",
+                id: "back-btn",
+                name: "submit",
+            })
+        ).appendTo("#content");
 
-		$("#back-btn").click(function() {
-			history.back();
-		});
+        $("#back-btn").click(function() {
+            history.back();
+        });
+
+        $("#parent-popup").click(function() {
+            history.back();
+        });
 
     });
+
 </script>
 
 {{template "footer"}}

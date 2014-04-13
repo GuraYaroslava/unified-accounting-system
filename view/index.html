@@ -1,5 +1,6 @@
 {{define "index"}}
 {{template "header"}}
+
 <div id="container">
     <div id="content">
         <form id="form-register">
@@ -16,10 +17,17 @@
             <input type="button" value="регистрация" id="register-btn" name="submit"/>
             <input type="button" value="вход" id="login-btn" name="submit"/>
         </form>
-        <div id="title"></div>
-        <div id="server-answer"></div>
-        <div id="cabinet"></div>
-    </div>
+        <div id="server-answer" class="right" style="text-align: right"></div>
+
+        <br/>
+        <p>
+            Unified Accounting System (UAS) - web-севис для cистемы учета участников соревновательных мероприятий.
+        </p>
+
+        <p>Открытые мероприятия:</p>
+    
+        <div id="list-contests">
+        </div>
 </div>
 {{template "footer"}}
 {{end}}

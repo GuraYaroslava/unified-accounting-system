@@ -57,14 +57,16 @@
 <body>
 
 <div id="content-top">
-    <span class="left">
-        <a href="/"><strong>Система учета участников олимпиад</strong></a>
-    </span>
-    <div class="div-top">
-        <input type="button" id="logout-btn" value="выход" name="submit" style="visibility: hidden"/>
+    <div class="div-top-left">
+        <input type="button" id="home-btn" value="Система учета участников олимпиад" name="submit"/>
     </div>
-    <div class="div-top">
-        <input type="button" id="cabinet-btn" value="личный кабинет" name="submit" style="visibility: hidden"/>
+    <div class="div-top-right">
+        <div class="right">
+        <input type="button" id="logout-btn" value="выход" name="submit" style="visibility: hidden"/>
+        </div>
+        <div class="right">
+            <input type="button" id="cabinet-btn" value="личный кабинет" name="submit" style="visibility: hidden"/>
+        </div>
     </div>
 </div>
 {{end}}
