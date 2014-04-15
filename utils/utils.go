@@ -11,3 +11,11 @@ func HandleErr(message string, err error) {
         os.Exit(1)
     }
 }
+
+func ArrayInterfaceToString(array []interface{}, length int) []string {
+    result := make([]string, length)
+    for i, v := range array {
+        result[i] = v.(string)
+    }
+    return result
+}
