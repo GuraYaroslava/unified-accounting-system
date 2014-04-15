@@ -24,8 +24,8 @@
 <script type="text/javascript">
 require(["utils"],
 function(utils) {
-    var colNames  = "{{.ColNames}}".slice(1, -1).split(" ");
-    var columns  = "{{.Columns}}".slice(1, -1).split(" ");
+    var colNames = "{{.ColNames}}".slice(1, -1).split(" ");
+    var columns = "{{.Columns}}".slice(1, -1).split(" ");
 
     if (data != null) {
         $("#title").text("Личный кабинет");
@@ -37,6 +37,7 @@ function(utils) {
             class: "left"
         }).appendTo("#cabinet");
 
+        //for admin
         if (data["id"] == 1) {
             $("<p/>", {}).append(
                 $("<input/>", {
@@ -73,6 +74,7 @@ function(utils) {
                 })
             ).appendTo("#form-private");
 
+        //for user
         } else {
             var j = 0;
             for (var i in data) {
