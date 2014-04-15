@@ -38,30 +38,3 @@ type UserModel struct {
     UserColumns  []string
     UserColNames []string
 }
-
-/*type User struct {
-    Id       string `json:"id"`
-    Login    string `json:"login"`
-    Password string `json:"password"`
-    Salt     string `json:"salt"`
-    Sid      string `json:"sid"`
-
-    FName string `json:"fname"`
-    LName string `json:"lname"`
-    PName string `json:"pname"`
-
-    EMail     string     `json:"email"`
-    Phone     string     `json:"phone"`
-    Address   string     `json:"address"`
-    TableData *UserModel `json:"tableData"`
-}*/
-
-/*type User struct {
-    FName string `json:"fname"`
-    LName string `json:"lname"`
-    PName string `json:"pname"`
-
-    EMail     string     `json:"email"`
-    Phone     string     `json:"phone"`
-    Address   string     `json:"address"`
-}*/
