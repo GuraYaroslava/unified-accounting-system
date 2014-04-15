@@ -69,22 +69,13 @@ func (this *Handler) HandleRegister(login string, password string) string {
 }
 
 func (this *Handler) HandleLogin(login, password string) string {
-
     result := map[string]interface{}{"result": "invalidCredentials"}
     isExist, id, hash, salt := IsExist(login)
-    fmt.Println("login salt: ", salt)
     if isExist && hash == GetMD5Hash(password+salt) {
-
         sess := this.Session.SessionStart(this.Response, this.Request)
         sess.Set("createTime", time.Now().Unix())
         sess.Set("login", login)
         sess.Set("id", id)
-        createTime := sess.Get("createTime")
-        if createTime == nil {
-            sess.Set("createTime", time.Now().Unix())
-        } else if createTime.(int64)+this.Session.Maxlifetime < time.Now().Unix() {
-            this.Session.GC()
-        }
         result["id"] = id
         result["result"] = "ok"
     }
@@ -96,7 +87,6 @@ func (this *Handler) HandleLogin(login, password string) string {
 func (this *Handler) HandleLogout() string {
     result := map[string]string{"result": "ok"}
     this.Session.SessionDestroy(this.Response, this.Request)
-    fmt.Println("session destroy", this.Session)
     response, err := json.Marshal(result)
     utils.HandleErr("[HandleLogout] json.Marshal: ", err)
     return string(response)
