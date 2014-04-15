@@ -16,10 +16,6 @@ type Handler struct {
     Controller
 }
 
-type ID struct {
-    Id string
-}
-
 func (this *Handler) Index() {
     var (
         request  interface{}
@@ -49,20 +45,27 @@ func (this *Handler) Index() {
         response = this.HandleLogout()
         fmt.Fprintf(this.Response, "%s", response)
         break
+    case "getId":
+        sess := this.Session.SessionStart(this.Response, this.Request)
+        ans := map[string]interface{}{"id": sess.Get("id")})
+        res, err := json.Marshal(ans)
+        utils.HandleErr("[Handle.Index] json.Marshal: ", err)
+        fmt.Fprintf(this.Response, "%s", string(res))
+        break
     case "home":
         tmp, err := template.ParseFiles("view/index.html", "view/header.html", "view/footer.html")
         utils.HandleErr("[Handler.Index] ParseFiles: ", err)
-        sess := this.Session.SessionStart(this.Response, this.Request)
-        id := sess.Get("id").(string)
-        fmt.Println("id: ", id)
-        err = tmp.ExecuteTemplate(this.Response, "index", ID{Id: id})
+        err = tmp.ExecuteTemplate(this.Response, "index", nil)
         utils.HandleErr("[Handler.Index] ExecuteTemplate: ", err)
+        break
     case "select":
         tableName := data["table"].(string)
         fields := data["fields"].([]interface{})
         base := new(models.ModelManager)
+
         var model models.Entity
         var length int
+
         switch tableName {
         case "Users":
             length = len(base.Users().UserColumns)
@@ -83,17 +86,18 @@ func (this *Handler) Index() {
         }
         pp := make([]string, j)
         copy(pp[:], p[:j])
-        fmt.Println("pp: ", pp)
         answer := model.Select(nil, pp...)
-        fmt.Println("select data: ", answer)
+        //fmt.Println("select data: ", answer)
         response, err := json.Marshal(answer)
         utils.HandleErr("[HandleLogin] json.Marshal: ", err)
         fmt.Fprintf(this.Response, "%s", response)
     case "update":
         tableName := data["table"].(string)
         base := new(models.ModelManager)
+
         var model models.Entity
         var length int
+
         switch tableName {
         case "Users":
             length = len(base.Users().UserColumns)
@@ -104,14 +108,13 @@ func (this *Handler) Index() {
             model = base.Contests().Entity
             break
         }
+
         d := data["data"].(map[string](interface{}))
-        fields := d["fields"].([]interface{})
-        p := make([]string, length-1)
-        for i, v := range fields {
-            p[i] = v.(string)
-        }
+        fields := utils.ArrayInterfaceToString(d["fields"].([]interface{}), length-1)
         values := d["userData"].([]interface{})
-        model.Update(p, values, fmt.Sprintf("id=%s", data["id"]))
+
+        model.Update(fields, values, fmt.Sprintf("id=%s", data["id"]))
+
         response, err := json.Marshal(map[string]interface{}{"result": "ok"})
         utils.HandleErr("[HandleLogin] json.Marshal: ", err)
         fmt.Fprintf(this.Response, "%s", response)

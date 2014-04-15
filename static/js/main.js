@@ -11,6 +11,14 @@ function(auth, utils) {
             listSubjects,
             "/handler"
         )
+
+        utils.postRequest(
+            {
+                "action": "getId",
+            },
+            showCabinet,
+            "/handler"
+        )
     });
 
     $("#register-btn").click(function() {
@@ -37,9 +45,18 @@ function(auth, utils) {
         for (i in data) {
             $("<a/>", {
                 text: data[i].name,
-                href: "/"//+data[i].id,
+                href: "/",//+data[i].id
                 class: "form-row",
             }).appendTo("div#list-contests");
+        }
+    }
+
+    function showCabinet(data) {
+        console.log(data)
+        if (data.id != null) {
+            $("#logout-btn, #cabinet-btn").css("visibility", "visible");
+        } else {
+            $("#logout-btn, #cabinet-btn").css("visibility", "hidden");
         }
     }
 
