@@ -27,7 +27,7 @@ func (st *SessionStore) Set(key, value interface{}) error {
 }
 
 func (st *SessionStore) Get(key interface{}) interface{} {
-    pder.SessionUpdate(st.sid)
+    //pder.SessionUpdate(st.sid)
     if v, ok := st.value[key]; ok {
         return v
     } else {
