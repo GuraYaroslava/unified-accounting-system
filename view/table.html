@@ -14,7 +14,7 @@
     var colModel_ = [];
 </script>
 
-<!-- colModel_ init -->
+<!-- colModel_ init ---------------------------------------------------------->
 {{with .Columns}}
     {{range $i, $v := .}}
         <script type="text/javascript">
@@ -22,20 +22,19 @@
             function datePicker(e) {$(e).datepicker({"dateFormat":"yy-mm-dd"});}
             data["name"] = "{{$v}}";
             data["index"] = "{{$v}}";
+            data["editable"] = true;
             if ("{{$v}}" == "id") {
                 data["editable"] = false;
             } else if ("{{$v}}" == "date") {
                 data["editoptions"] = {dataInit: datePicker}
-                data["editable"] = true;
-            }else {
-                data["editable"] = true;
             }
             colModel_.push(data)
         </script>
     {{end}}
 {{end}}
-<!-- end colModel_ init -->
+<!-- end colModel_ init ------------------------------------------------------>
 
+<!-- jsData init ------------------------------------------------------------->
 {{with .Table}}
     {{range $index, $elmt := .}}
         <script type="text/javascript">
@@ -56,6 +55,7 @@
         jsData = jsData.slice(0, jsData.length-1) + "]";
     </script>
 {{end}}
+<!-- end jsData init ---------------------------------------------------------->
 
 <script type="text/javascript">
     var id_;
@@ -69,6 +69,9 @@
             colModel:       colModel_,
             pager:          $("#grid-table-pager"),
             width:          1000,
+            gridview:       true,
+            sortname:       "invdate",
+            viewrecords:    true,
             height:         "100%",
             rowNum:         10,
             rownumbers:     true,
@@ -86,12 +89,20 @@
             editurl:        "/handler/edit/" + "{{.TableName}}"
         });
 
+        $("#grid-table").jqGrid(
+            "gridResize", 
+            {
+                minWidth: 450,
+                minHeight: 150
+            }
+        );
+
         $("#grid-table").navGrid(
             "#grid-table-pager",
             {
-                edit:   true,    edittext:   "Редактировать",
-                add:    true,    addtext:    "Создать",
-                del:    true,    deltext:    "Удалить",
+                edit:   true,    //edittext:   "Редактировать",
+                add:    true,    //addtext:    "Создать",
+                del:    true,    //deltext:    "Удалить",
                 refresh: false,
                 view:   false,
                 search: false
@@ -128,7 +139,7 @@
                 "navButtonAdd",
                 "#grid-table-pager",
                 {
-                    caption: "Анкета", buttonicon: "ui-icon-script", title: "",
+                    caption: /*"Анкета"*/"", buttonicon: "ui-icon-script", title: "",
                     onClickButton: function() {
                         alert(id_);
                         dada(id_);
@@ -163,6 +174,10 @@
             }
         );
 
+        $(window).bind("resize", function() {
+            $("#jqgrid").setGridWidth($(window).width());
+        }).trigger("resize");
+
         $("<p/>", {}).append(
             $("<input/>", {
                 type: "button",
@@ -170,7 +185,7 @@
                 id: "back-btn",
                 name: "submit",
             })
-        ).appendTo("#content");
+        ).appendTo("#container");
 
         $("#back-btn").click(function() {
             history.back();
