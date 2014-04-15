@@ -21,18 +21,20 @@ func (this *Handler) SelectById(tableName string) {
     sess := this.Session.SessionStart(this.Response, this.Request)
     createTime := sess.Get("createTime")
     life := this.Session.Maxlifetime
-    id := sess.Get("id")
-    if createTime == nil ||
-        createTime.(int64)+life < time.Now().Unix() {
-        tmp, err := template.ParseFiles("view/index.html", "view/header.html", "view/footer.html")
+    if createTime == nil || createTime.(int64)+life < time.Now().Unix() {
+        this.Session.SessionDestroy(this.Response, this.Request)
+        fmt.Println("SelectById - Destroy")
+        tmp, err := template.ParseFiles(
+            "view/index.html",
+            "view/header.html",
+            "view/footer.html")
         utils.HandleErr("[handler.select] ParseFiles: ", err)
         err = tmp.ExecuteTemplate(this.Response, "index", nil)
         utils.HandleErr("[handler.select] ExecuteTemplate: ", err)
         return
-
-    } else {
-        this.Session.GC()
     }
+    sess.Set("createTime", time.Now().Unix())
+    id := sess.Get("id")
     base := new(models.ModelManager)
     var answer []interface{}
     switch tableName {
@@ -57,7 +59,9 @@ func (this *Handler) Select(tableName string) {
     sess := this.Session.SessionStart(this.Response, this.Request)
     createTime := sess.Get("createTime")
     life := this.Session.Maxlifetime
-    if createTime == nil || createTime.(int64)+life < time.Now().Unix() {
+    if createTime.(int64)+life < time.Now().Unix() {
+        this.Session.SessionDestroy(this.Response, this.Request)
+        fmt.Println("Select - Destroy")
         tmp, err := template.ParseFiles(
             "view/index.html",
             "view/header.html",
@@ -66,9 +70,8 @@ func (this *Handler) Select(tableName string) {
         err = tmp.ExecuteTemplate(this.Response, "index", nil)
         utils.HandleErr("[handler.select] ExecuteTemplate: ", err)
         return
-    } else {
-        this.Session.GC()
     }
+    sess.Set("createTime", time.Now().Unix())
     base := new(models.ModelManager)
     var model models.Entity
     switch tableName {
@@ -95,6 +98,22 @@ func (this *Handler) Select(tableName string) {
 }
 
 func (this *Handler) Edit(tableName string) {
+    sess := this.Session.SessionStart(this.Response, this.Request)
+    createTime := sess.Get("createTime")
+    life := this.Session.Maxlifetime
+    if createTime.(int64)+life < time.Now().Unix() {
+        this.Session.SessionDestroy(this.Response, this.Request)
+        fmt.Println("Edit - Destroy")
+        tmp, err := template.ParseFiles(
+            "view/index.html",
+            "view/header.html",
+            "view/footer.html")
+        utils.HandleErr("[handler.select] ParseFiles: ", err)
+        err = tmp.ExecuteTemplate(this.Response, "index", nil)
+        utils.HandleErr("[handler.select] ExecuteTemplate: ", err)
+        return
+    }
+    sess.Set("createTime", time.Now().Unix())
     oper := this.Request.FormValue("oper")
     base := new(models.ModelManager)
     var model models.Entity
@@ -109,9 +128,8 @@ func (this *Handler) Edit(tableName string) {
 
     params := make([]interface{}, len(model.Columns)-1)
     for i := 0; i < len(model.Columns)-1 && this.Request.FormValue(model.Columns[i+1]) != ""; i++ {
-        fmt.Println(this.Request.FormValue(model.Columns[i+1]))
         if model.Columns[i+1] == "date" {
-            params[i] = this.Request.FormValue(model.Columns[i+1])[0:10]
+            params[i] = this.Request.FormValue(model.Columns[i+1])[0:10] 
         } else {
             params[i] = this.Request.FormValue(model.Columns[i+1])
         }
