@@ -47,7 +47,7 @@ func (this *Handler) Index() {
         break
     case "getId":
         sess := this.Session.SessionStart(this.Response, this.Request)
-        ans := map[string]interface{}{"id": sess.Get("id")})
+        ans := map[string]interface{}{"id": sess.Get("id")}
         res, err := json.Marshal(ans)
         utils.HandleErr("[Handle.Index] json.Marshal: ", err)
         fmt.Fprintf(this.Response, "%s", string(res))
