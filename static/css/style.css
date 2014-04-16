@@ -1,162 +1,230 @@
-textarea
-{
-  margin-right: auto;
-  margin-left: auto;
-  width: 100%;
-  font-family: "Verdana", Fallback, sans-serif;
+html, body {
+    height: 100%;
+    font-size: 80%;
+    margin: 0px 10px 10px 10px;
 }
 
-html, body
-{
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-size: 80%;
+body, input {
+    color: #555;
+    font-size: 13px;
+    font-family: Helvetica, Arial, sans-serif;
 }
 
-label
-{
-  color: #444444;
-  display: block;
-  float: left;
-  font-size: 18px;
-  padding: 0;
-  width: 170px;
+form {
+    width: 300px;
+    margin: 40px auto 0;
+    padding: 20px 20px 10px;
+    border-radius: 5px;
+    border: 1px solid #e1e1e8;
+    background-color: #f7f7f9;
+    box-shadow: rgba(0,0,0,0.075) 2px 3px 7px;
 }
 
-.form-row
-{
-  margin-bottom: 15px;
-  display: block;
+input, button {
+    outline: none;
 }
 
-h1, form
-{
-  font-family: Cambria, Helvetica, Arial, sans-serif;
+label {
+    color: #444444;
+    display: block;
+    float: left;
+    font-size: 18px;
+    padding: 0;
+    width: 170px;
 }
 
-th.ui-th-column div
-{
-  white-space:normal !important;
-  height:auto !important;
-  padding:2px;
+.form-row {
+    margin-bottom: 15px;
+    display: block;
 }
 
+h1, form {
+    font-family: Cambria, Helvetica, Arial, sans-serif;
+}
+
+/*---------------------------------------------------------------------------*/
+th.ui-th-column div {
+    white-space:normal !important;
+    height:auto !important;
+    padding:2px;
+}
 
 .ui-jqgrid tr.jqgrow td {
-  word-wrap: break-word;      /* IE 5.5+ CSS3 see http://www.w3.org/TR/css3-text/#text-wrap */
-  white-space: pre-wrap;      /* CSS3 */
-  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-  white-space: -pre-wrap;     /* Opera 4-6 */
-  white-space: -o-pre-wrap;   /* Opera 7 */
-  overflow: hidden;
-  height: auto;
-  vertical-align: middle;
-  padding-top: 3px;
-  padding-bottom: 3px
+    word-wrap: break-word;      /* IE 5.5+ CSS3 see http://www.w3.org/TR/css3-text/#text-wrap */
+    white-space: pre-wrap;      /* CSS3 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap;     /* Opera 4-6 */
+    white-space: -o-pre-wrap;   /* Opera 7 */
+    overflow: hidden;
+    height: auto;
+    vertical-align: middle;
+    padding-top: 3px;
+    padding-bottom: 3px
 }
-
 
 /*---------------------------------------------------------------------------*/
-#content-top
-{
-  width: 100%;
-  font-size: 11px;
-  text-transform: uppercase;
-  z-index: 9999;
-  box-shadow: 1px 0px 2px rgba(0,0,0,0.2);
-  display: block;
+#content-top {
+    width: 100%;
+    font-size: 11px;
+    text-transform: uppercase;
+    z-index: 9999;
+    box-shadow: 1px 0px 2px rgba(0,0,0,0.2);
+    display: block;
 }
 
-.div-top-left
-{
-  padding: 0px 0px 0px 0px;
-  margin: 0px 0px 0px 0px;
-  width: 50%;
-  float: left;
-  display: block;
+.div-top-left {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 50%;
+    float: left;
+    display: block;
 }
 
-.div-top-right
-{
-  padding: 0px 0px 0px 0px;
-  margin: 0px 0px 0px 0px;
-  width: 50%;
-  float: right;
-  display: block;
+.div-top-right {
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    width: 50%;
+    float: right;
+    display: block;
 }
+
 /*---------------------------------------------------------------------------*/
-
-.left
-{
-  float: left;
-  display: block;
+.left {
+    float: left;
+    display: block;
 }
 
-.right
-{
-  float: right;
-  display: block;
+.right {
+    float: right;
+    display: block;
 }
-/*---------------------------------------------------------------------------*/
 
 * html body
 {
-  overflow: hidden;
+    overflow: hidden;
 }
 
 body
 {
-  font-family: Cambria, Palatino, Georgia, serif;
-  background: #fff url(../img/bg.jpg) repeat top left;
-  font-weight: 400;
-  font-size: 15px;
-  color: #1d3c41;
-  overflow-y: scroll;
+    font-family: Cambria, Palatino, Georgia, serif;
+    background: #fff url(../img/bg.jpg) repeat top left;
+    font-weight: 400;
+    font-size: 15px;
+    color: #1d3c41;
+    overflow-y: scroll;
 }
 
-#form-register, #form-private, #blank
-{
-  padding: 15px 1% 15px 1%;
-  margin: 5px 5px 5px 5px;/
-  background: rgb(247, 247, 247) url(../img/b.jpg) repeat top left;
-  background: white;
-  border-radius: 5px;
-  border: 1px solid rgba(147, 184, 189,0.8);
-  box-shadow:
-    0pt 2px 5px rgba(105, 108, 109,  0.7),
-    0px 0px 8px 5px rgba(208, 223, 226, 0.4) inset;
- }
-
-#form-register, #form-private, #title, #back-btn, #list-contests
-{
-  margin: 10px 10px 10px 10px;
+/*---------------------------------------------------------------------------*/
+#form-register, #form-private, #blank {
+    padding: 15px 1% 15px 1%;
 }
 
-#form-register
-{
-  float: right;
-  margin: 0px 0px 0px 0px;
+#form-register, #form-private, #title, #back-btn, #list-contests {
+    margin: 10px 10px 10px 10px;
 }
 
-#container
-{
-  height: 100%;
+#form-register {
+    float: right;
+    margin: 5px 0px 0px 0px;
 }
 
-#list-contests, #title, #container, #content, #server-answer
-{
-  width: 100%;
+#container {
+    height: 100%;
 }
 
-#title
-{
-  text-align: left;
-  position: relative;
-  font-size: 20px;
+#list-contests, #title, #container, #content, #server-answer {
+    width: 100%;
 }
 
-#server-answer
-{
-  text-align: left;
+#title {
+    text-align: left;
+    position: relative;
+    font-size: 20px;
+}
+
+#server-answer {
+    text-align: left;
+}
+
+/*---------------------------------------------------------------------------*/
+.field label {
+    display: inline-block;
+    width: 80px;
+    vertical-align: middle;
+}
+
+.field {
+    margin-bottom: 10px;
+    padding: 0;
+}
+
+.field input {
+    height: 2em;
+    min-width: 196px;
+    border-radius: 3px;
+    border: 1px solid #d3d3d3;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.1);
+    padding: 0 7px;
+    color: #666;
+}
+
+.tooltip {
+    position: absolute;
+    top: 16px;
+    left: 360px;
+    width: 220px;
+    color: #b94a48;
+    padding: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #eed3d7;
+    background-color: #f2dede;
+    opacity: 0.8;
+}
+
+.tooltip b {
+    position: absolute;
+    display: block;
+    left: -14px;
+    width: 0;
+    height: 0;
+    color: transparent;
+    border: 7px solid;
+    border-right-color: #f2dede;
+}
+
+#kladr_autocomplete ul {
+    border-radius: 4px;
+    border-color: #d3d3d3;
+    padding: 0;
+    background-color: #fff;
+}
+
+#kladr_autocomplete li {
+    padding: 6px 8px;
+    border: none;
+    border-bottom: 1px solid #ededed;
+    background-color: transparent;
+}
+
+#kladr_autocomplete ul .active {
+    border: none;
+    border-bottom: 1px solid  #f0f0f0;
+    background-color: #f0f0f0;
+    margin-top: -1px;
+    padding-top: 7px;
+}
+
+#kladr_autocomplete ul li:first-child.active {
+    padding-top: 6px;
+    margin-top: 0;
+}
+
+#kladr_autocomplete li strong {
+    color: #5499BB;
+}
+
+#kladr_autocomplete .spinner {
+    background-image: url("../img/spinner.png");
+    width: 16px;
+    height: 16px;
 }

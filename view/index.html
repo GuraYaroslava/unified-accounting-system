@@ -4,12 +4,12 @@
 <div id="container">
     <div id="content">
         <form id="form-register">
-            <div class="form-row">
+            <div class="field">
                 <label for="username">Логин</label>
                 <input type="text" id="username" name="login"/>
             </div>
 
-            <div class="form-row">
+            <div class="field">
                 <label for="password">Пароль</label>
                 <input type="password" id="password" name="password"/>
             </div>
@@ -21,13 +21,14 @@
 
         <br/>
         <p>
-            Unified Accounting System (UAS) - web-севис для cистемы учета участников соревновательных мероприятий.
+            <strong>Unified Accounting System (UAS)</strong> - web-севис для учета участников соревновательных мероприятий.
         </p>
 
-        <p>Открытые мероприятия:</p>
+        <p><i>Открытые мероприятия:</i></p>
     
         <div id="list-contests">
         </div>
+    </div>
 </div>
 {{template "footer"}}
 {{end}}

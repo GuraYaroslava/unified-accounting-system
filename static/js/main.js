@@ -10,7 +10,7 @@ function(auth, utils) {
             },
             listSubjects,
             "/handler"
-        )
+        );
 
         utils.postRequest(
             {
@@ -18,7 +18,7 @@ function(auth, utils) {
             },
             showCabinet,
             "/handler"
-        )
+        );
     });
 
     $("#register-btn").click(function() {
