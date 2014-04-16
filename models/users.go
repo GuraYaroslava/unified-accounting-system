@@ -7,12 +7,64 @@ func (c *ModelManager) Users() *UserModel {
     userModel.Caption = "Пользователи"
 
     //admin mode
-    userModel.Columns = []string{"id", "login", "password", "salt", "sid", "fname", "lname", "pname", "email", "phone", "address"}
-    userModel.ColNames = []string{"Id", "Логин", "Хеш", "Соль", "Sid", "Фамилия", "Имя", "Отчество", "E-mail", "Телефон", "Адрес"}
+    userModel.Columns = []string{
+        "id",
+        "login",
+        "password",
+        "salt",
+        "sid",
+        "fname",
+        "lname",
+        "pname",
+        "email",
+        "phone",
+        "region",
+        "district",
+        "city",
+        "street",
+        "building"}
+    userModel.ColNames = []string{
+        "Id",
+        "Логин",
+        "Хеш",
+        "Соль",
+        "Sid",
+        "Фамилия",
+        "Имя",
+        "Отчество",
+        "E-mail",
+        "Телефон",
+        "Регион",
+        "Район",
+        "Город",
+        "Улица",
+        "Дом,кв."}
 
     //user mode
-    userModel.UserColumns = []string{"id", "fname", "lname", "pname", "email", "phone", "address"}
-    userModel.UserColNames = []string{"Id", "Фамилия", "Имя", "Отчество", "E-mail", "Телефон", "Адрес"}
+    userModel.UserColumns = []string{
+        "id",
+        "fname",
+        "lname",
+        "pname",
+        "email",
+        "phone",
+        "region",
+        "district",
+        "city",
+        "street",
+        "building"}
+    userModel.UserColNames = []string{
+        "Id",
+        "Фамилия",
+        "Имя",
+        "Отчество",
+        "E-mail",
+        "Телефон",
+        "Регион",
+        "Район",
+        "Город",
+        "Улица",
+        "Дом,кв."}
 
     tmp := map[string]*Field{
         "id":       {"id", "Id", "serial", false},
@@ -25,9 +77,14 @@ func (c *ModelManager) Users() *UserModel {
         "lname": {"lname", "Имя", "varchar(32)", false},
         "pname": {"pname", "Отчество", "varchar(32)", false},
 
-        "email":   {"email", "E-mail", "varchar(32)", false},
-        "phone":   {"phone", "Телефон", "varchar(32)", false},
-        "address": {"address", "Адрес", "varchar(32)", false},
+        "email": {"email", "E-mail", "varchar(32)", false},
+        "phone": {"phone", "Телефон", "varchar(32)", false},
+
+        "region":   {"region", "Регион", "varchar(32)", false},
+        "district": {"district", "Район", "varchar(32)", false},
+        "city":     {"city", "Город", "varchar(32)", false},
+        "street":   {"street", "Улица", "varchar(32)", false},
+        "building": {"building", "Дом,кв.", "varchar(32)", false},
     }
     userModel.Fields = tmp
     return userModel
