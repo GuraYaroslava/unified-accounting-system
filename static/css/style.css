@@ -113,10 +113,6 @@ body {
 }
 
 /*---------------------------------------------------------------------------*/
-#form-register, #form-private, #blank {
-    padding: 15px 1% 15px 1%;
-}
-
 #form-register, #form-private, #title, #back-btn, #list-contests {
     margin: 10px 10px 10px 10px;
 }
