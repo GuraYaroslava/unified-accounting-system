@@ -99,13 +99,11 @@ th.ui-th-column div {
     display: block;
 }
 
-* html body
-{
+* html body {
     overflow: hidden;
 }
 
-body
-{
+body {
     font-family: Cambria, Palatino, Georgia, serif;
     background: #fff url(../img/bg.jpg) repeat top left;
     font-weight: 400;
