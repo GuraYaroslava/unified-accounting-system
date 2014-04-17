@@ -13,7 +13,7 @@ body, input {
 form {
     width: 300px;
     margin: 40px auto 0;
-    padding: 20px 20px 10px;
+    padding: 20px 20px 10px 1%;
     border-radius: 5px;
     border: 1px solid #e1e1e8;
     background-color: #f7f7f9;
