@@ -59,7 +59,7 @@ func (this *Handler) Select(tableName string) {
     sess := this.Session.SessionStart(this.Response, this.Request)
     createTime := sess.Get("createTime")
     life := this.Session.Maxlifetime
-    if createTime.(int64)+life < time.Now().Unix() {
+    if createTime == nil || createTime.(int64)+life < time.Now().Unix() {
         this.Session.SessionDestroy(this.Response, this.Request)
         fmt.Println("Select - Destroy")
         tmp, err := template.ParseFiles(
