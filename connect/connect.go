@@ -70,6 +70,17 @@ func DBInitSchema() {
     _, err = db.Exec(query)
     utils.HandleErr("[Connect.InitSchema.Contests]: ", err)
 }
+
+func DBGetLastInsertedId(tableName string) string {
+    db := DBConnect()
+    defer DBClose(db)
+    var id string
+    query := "SELECT last_value FROM " + tableName + "_id_seq"
+    stmt, err := db.Prepare(query)
+    utils.HandleErr("[Connect.GetLastInsertedId] Prepare: ", err)
+    err = stmt.QueryRow().Scan(&id)
+    utils.HandleErr("[Connect.GetLastInsertedId] Query: ", err)
+    return id
 }
 
 func DBSelect(from string, where []string, fields ...string) string {
