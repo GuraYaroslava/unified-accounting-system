@@ -53,8 +53,23 @@ func DBInitSchema() {
                     street   varchar(32)  NOT NULL DEFAULT '',
                     building varchar(32)  NOT NULL DEFAULT ''
                 );`
-    _, err := db.Exec(querty)
-    utils.HandleErr("Connect->InitSchema: ", err)
+    _, err := db.Exec(query)
+    utils.HandleErr("[Connect.InitSchema.Users]: ", err)
+    query = `CREATE TABLE IF NOT EXISTS contests (
+                    id       serial       NOT NULL PRIMARY KEY,
+                    name     varchar(128) NOT NULL UNIQUE,
+                    date     date         NOT NULL
+                );`
+    _, err = db.Exec(query)
+    utils.HandleErr("[Connect.InitSchema.Contests]: ", err)
+    query = `CREATE TABLE IF NOT EXISTS blanks (
+                    id          serial       NOT NULL PRIMARY KEY,
+                    name        varchar(128) NOT NULL UNIQUE,
+                    contest_id  int          NOT NULL REFERENCES contests (id)
+                );`
+    _, err = db.Exec(query)
+    utils.HandleErr("[Connect.InitSchema.Contests]: ", err)
+}
 }
 
 func DBSelect(from string, where []string, fields ...string) string {
