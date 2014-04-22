@@ -11,8 +11,8 @@ body, input {
 }
 
 form {
-    width: 300px;
-    margin: 40px auto 0;
+    width: 350px;
+    margin: 0px 0px 20px 0px;
     padding: 20px 20px 10px 1%;
     border-radius: 5px;
     border: 1px solid #e1e1e8;
@@ -30,7 +30,7 @@ label {
     float: left;
     font-size: 18px;
     padding: 0;
-    width: 170px;
+    width: 190px;
 }
 
 .form-row {
@@ -122,10 +122,6 @@ body {
     margin: 5px 0px 0px 0px;
 }
 
-#container {
-    height: 100%;
-}
-
 #list-contests, #title, #container, #content, #server-answer {
     width: 100%;
 }
@@ -143,7 +139,7 @@ body {
 /*---------------------------------------------------------------------------*/
 .field label {
     display: inline-block;
-    width: 80px;
+    width: 130px;
     vertical-align: middle;
 }
 
@@ -221,4 +217,33 @@ body {
     background-image: url("../img/spinner.png");
     width: 16px;
     height: 16px;
+}
+
+/*---------------------------------------------------------------------------*/
+.module {
+    /*display:none;*/
+    border-radius:20;
+    /*position: absolute;*/
+    width: 400px;
+    height: 120px;
+    /*left: 50%;*/
+    top: 15%;
+    /*margin-left: -200px;
+    margin-top: -100px;*/
+    margin-bottom: 15px;
+    background: white;
+    border: solid 1px #7FC9FF;
+    padding: 10px;
+    overflow: auto;
+    box-shadow:0 0 30px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 0 0 10px rgba(0,0,0,0.5); 
+    z-index: 1;
+}
+#close, #new, #save {
+    cursor: pointer;
+}
+
+#close {
+    float: right;
 }
