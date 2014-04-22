@@ -50,8 +50,8 @@ func (this *Handler) SelectById(tableName string) {
         utils.HandleErr("[Handler.SelectById] template.ParseFiles: ", err)
         err = tmp.ExecuteTemplate(this.Response, "card", Model{
             Table:    answer,
-            ColNames: model.UserColNames,
-            Columns:  model.UserColumns})
+            ColNames: utils.ArrayStringToInterface(model.UserColNames),
+            Columns:  utils.ArrayStringToInterface(model.UserColumns)})
         utils.HandleErr("[Handler.SelectById] tmp.Execute: ", err)
         break
     }
@@ -93,8 +93,8 @@ func (this *Handler) Select(tableName string) {
     err = tmp.ExecuteTemplate(this.Response, "edit", Model{
         Table:     answer,
         TableName: model.TableName,
-        ColNames:  model.ColNames,
-        Columns:   model.Columns,
+        ColNames:  utils.ArrayStringToInterface(model.ColNames),
+        Columns:   utils.ArrayStringToInterface(model.Columns),
         Caption:   model.Caption})
     utils.HandleErr("[Handler.Select] tmp.Execute: ", err)
 }
