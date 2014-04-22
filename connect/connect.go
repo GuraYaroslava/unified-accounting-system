@@ -131,6 +131,21 @@ func DBGetLastInsertedId(tableName string) string {
     return id
 }
 
+func DBGetColumnNames(tableName string) []string {
+    db := DBConnect()
+    defer DBClose(db)
+    var columns []string
+    query := "SELECT * FROM " + tableName
+    stmt, err := db.Prepare(query)
+    utils.HandleErr("[Connect.DBGetColumnNames] Prepare: ", err)
+    rows, err := stmt.Query()
+    utils.HandleErr("[Connect.DBGetColumnNames] Query: ", err)
+    columns, err = rows.Columns()
+    utils.HandleErr("[Connect.DBGetColumnNames] Columns: ", err)
+    fmt.Println("column names: ", columns)
+    return columns
+}
+
 func DBSelect(from string, where []string, fields ...string) string {
     var format string = "SELECT %s FROM %s"
     if len(where) > 0 {
