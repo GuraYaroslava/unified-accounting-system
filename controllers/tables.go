@@ -10,11 +10,13 @@ import (
 )
 
 type Model struct {
-    Table     []interface{}
+    Id        string
     TableName string
-    Columns   []string
-    ColNames  []string
     Caption   string
+    Table     []interface{}
+    Columns   []interface{}
+    ColNames  []interface{}
+    Types     []interface{}
 }
 
 func (this *Handler) SelectById(tableName string) {
