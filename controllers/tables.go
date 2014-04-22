@@ -2,6 +2,7 @@ package controllers
 
 import (
     "fmt"
+    "github.com/uas/connect"
     "github.com/uas/models"
     "github.com/uas/utils"
     "strings"
@@ -164,4 +165,29 @@ func (this *Handler) Edit(tableName string) {
         model.Delete("id", p)
         break
     }
+}
+
+func (this *Handler) BlankShow(id string) {
+    base := new(models.ModelManager)
+    blanks := base.Blanks()
+
+    columns := blanks.Select(map[string]interface{}{"contest_id": id}, "columns")
+    cl := columns[0].(map[string]interface{})
+    colNames := blanks.Select(map[string]interface{}{"contest_id": id}, "colnames")
+    cln := colNames[0].(map[string]interface{})
+    types := blanks.Select(map[string]interface{}{"contest_id": id}, "types")
+    t := types[0].(map[string]interface{})
+
+    tmp, err := template.ParseFiles(
+        "../uas/view/blank.html",
+        "../uas/view/header.html",
+        "../uas/view/footer.html")
+    utils.HandleErr("[Handler.BlankShow] template.ParseFiles: ", err)
+
+    err = tmp.ExecuteTemplate(this.Response, "blank", Model{
+        Id:       id,
+        Columns:  utils.ArrayStringToInterface(strings.Split(cl["columns"].(string), ",")),
+        ColNames: utils.ArrayStringToInterface(strings.Split(cln["colnames"].(string), ",")),
+        Types:    utils.ArrayStringToInterface(strings.Split(t["types"].(string), ","))})
+    utils.HandleErr("[Handler.BlankShow] tmp.Execute: ", err)
 }
