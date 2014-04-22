@@ -52,12 +52,7 @@ func (this *Handler) Index() {
         utils.HandleErr("[Handle.Index] json.Marshal: ", err)
         fmt.Fprintf(this.Response, "%s", string(res))
         break
-    case "home":
-        tmp, err := template.ParseFiles("view/index.html", "view/header.html", "view/footer.html")
-        utils.HandleErr("[Handler.Index] ParseFiles: ", err)
-        err = tmp.ExecuteTemplate(this.Response, "index", nil)
-        utils.HandleErr("[Handler.Index] ExecuteTemplate: ", err)
-        break
+
     case "select":
         tableName := data["table"].(string)
         fields := data["fields"].([]interface{})
