@@ -1,0 +1,257 @@
+﻿{{define "blank"}}
+{{template "header"}}
+
+</br>
+</br>
+<div id="content">
+    <form></form>
+    <div id="add-block"></div>
+</div>
+
+<script>
+function addField(DBfieldName, fieldName, type, length) {
+    if (DBfieldName == null) {
+        DBfieldName = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+    }
+
+    var block_ = $("<div/>", {
+        id: Math.floor(Math.random() * (100 - 50 + 1)) + 50,
+        class: "module"
+    })
+
+    $("<img/>", {
+        src: "/img/delete.png",
+        id: "close",
+        alt: "delete",
+        onclick: "$(this).parent().remove();"
+    }).appendTo(block_)
+
+    var div_ = $("<div/>", {
+        class: "field"
+    });
+
+    var input_ = $("<input/>", {
+        id: DBfieldName,
+        name: DBfieldName,
+        type: "text"
+    }).val(fieldName);
+
+    var DBinput_ = $("<input/>", {
+        id: "db-" + DBfieldName,
+        name: "db-" + DBfieldName,
+        type: "text"
+    }).val(DBfieldName);
+
+    var len = $("<input/>", {
+        id: "length-" + DBfieldName,
+        name: "length-" + DBfieldName,
+        type: "text"
+    }).val(length);
+
+    var select_ = $("<select/>", {id: "select-type-" + DBfieldName, name: "select-type-" + DBfieldName})
+    .append($("<option/>", {value: "input", text: "input"}))
+    .append($("<option/>", {value: "date", text: "date"}))
+    /*.append($("<option/>", {value: "select", text: "select"}))*/;
+
+    $(select_).val(type).attr("selected", "selected");
+
+    $(div_)
+    .append($("<label/>").text("Имя поля")).append(input_)
+    .append($("<label/>").text("Имя поля в БД")).append(DBinput_)
+    .append($("<label/>").text("Тип поля")).append(select_).append("<br/>")
+    .append($("<label/>").text("Длина")).append(len);
+
+    $(block_).append(div_);
+    $("form").append(block_);
+    $("#label-" + DBfieldName).text("Название");
+
+    $("#length-" + DBfieldName).blur(function() {
+        var pattern = /^[0-9]+$/i;
+        if (pattern.test($(this).val())){
+            valid = true;
+            $(this).css({"border": "2px solid green"});
+        } else {
+            valid = false;
+            $(this).css({"border": "2px solid red"});
+        }
+    });
+
+    $("#db-" + DBfieldName).blur(function() {
+        var pattern = /^[a-z]+$/i;
+        if (pattern.test($(this).val())){
+            valid = true;
+            $(this).css({"border": "2px solid green"});
+        } else {
+            valid = false;
+            $(this).css({"border": "2px solid red"});
+        }
+    });
+}
+</script>
+
+<script>
+require(["utils"],
+function(utils) {
+    var id        = "{{.Id}}";
+    var columns   = "{{.Columns}}".slice(2, -2).split(" ");
+    var colNames  = "{{.ColNames}}".slice(2, -2).split(" ");
+    var types     = '{{.Types}}'.slice(2, -2).split(" ");
+    var valid     = true;
+
+    console.log(columns);
+    console.log(colNames);
+    console.log(types);
+
+    function toServer() {
+        var js = {
+            "action": "editBlank",
+            "data": getFormData(),
+            "id": id
+        };
+       utils.postRequest(js, function(data) {}, "/handler");
+    }
+
+    function getFormData() {
+        console.log("getData");
+        console.log($("form").serializeArray());
+        return $("form").serializeArray();
+    }
+
+    for (var i = 0; i < types.length; i++) {
+        console.log(types[i]);
+        var type = "input";
+        var start = types[i].indexOf("(");
+        var end = types[i].indexOf(")");
+
+        console.log(types[i]);
+        console.log(start);
+        console.log(end);
+
+        var length = types[i].slice(start+1, end);
+        console.log(length);
+
+        if (types[i].indexOf("[]") != -1) {
+            /*type = "select";
+            alert("select");*/
+
+        } else if (types[i] == "date") {
+            type = "date";
+            alert("date");
+        }
+        addField(columns[i], colNames[i], type, length);
+    }
+
+    $("<img/>", {
+        src: "/img/add.png",
+        id: "add",
+        alt: "add new field"
+    }).appendTo("#add-block");
+
+    $("#add").click(function() {
+        addField();
+    });
+
+    $("<img/>", {
+        src: "/img/save.png",
+        id: "save",
+        alt: "save all",
+    }).appendTo("#add-block");
+
+    $("#save").click(function() {
+        if (valid) {
+            toServer();
+        } else {
+            alert("Неверно заполнены поля!");
+        }
+    });
+
+    $("<img/>", {
+        src: "/img/preview.png",
+        id: "preview",
+        alt: "preview"
+        //onclick: "data()"
+    }).appendTo("#add-block");
+
+    function addField(DBfieldName, fieldName, type, length) {
+        if (DBfieldName == null) {
+            DBfieldName = Math.floor(Math.random() * (100 - 50 + 1)) + 50;
+        }
+
+        var block_ = $("<div/>", {
+            id: Math.floor(Math.random() * (100 - 50 + 1)) + 50,
+            class: "module"
+        })
+
+        $("<img/>", {
+            src: "/img/delete.png",
+            id: "close",
+            alt: "delete",
+            onclick: "$(this).parent().remove();"
+        }).appendTo(block_)
+
+        var div_ = $("<div/>", {
+            class: "field"
+        });
+
+        var input_ = $("<input/>", {
+            id: DBfieldName,
+            name: DBfieldName,
+            type: "text"
+        }).val(fieldName);
+
+        var DBinput_ = $("<input/>", {
+            id: "db-" + DBfieldName,
+            name: "db-" + DBfieldName,
+            type: "text"
+        }).val(DBfieldName);
+
+        var len = $("<input/>", {
+            id: "length-" + DBfieldName,
+            name: "length-" + DBfieldName,
+            type: "text"
+        }).val(length);
+
+        var select_ = $("<select/>", {id: "select-type-" + DBfieldName, name: "select-type-" + DBfieldName})
+        .append($("<option/>", {value: "input", text: "input"}))
+        .append($("<option/>", {value: "date", text: "date"}))
+        /*.append($("<option/>", {value: "select", text: "select"}))*/;
+
+        $(select_).val(type).attr("selected", "selected");
+
+        $(div_)
+        .append($("<label/>").text("Имя поля")).append(input_)
+        .append($("<label/>").text("Имя поля в БД")).append(DBinput_)
+        .append($("<label/>").text("Тип поля")).append(select_).append("<br/>")
+        .append($("<label/>").text("Длина")).append(len);
+
+        $(block_).append(div_);
+        $("form").append(block_);
+        $("#label-" + DBfieldName).text("Название");
+
+        $("#length-" + DBfieldName).blur(function() {
+            var pattern = /^[0-9]+$/i;
+            if (pattern.test($(this).val())){
+                valid = true;
+                $(this).css({"border": "2px solid green"});
+            } else {
+                valid = false;
+                $(this).css({"border": "2px solid red"});
+            }
+        });
+
+        $("#db-" + DBfieldName).blur(function() {
+            var pattern = /^[a-z]+$/i;
+            if (pattern.test($(this).val())){
+                valid = true;
+                $(this).css({"border": "2px solid green"});
+            } else {
+                valid = false;
+                $(this).css({"border": "2px solid red"});
+            }
+        });
+    }
+})
+</script>
+
+{{template "footer"}}
+{{end}}
