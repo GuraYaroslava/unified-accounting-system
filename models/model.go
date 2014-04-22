@@ -4,6 +4,8 @@ import (
     "fmt"
     "github.com/uas/connect"
     "github.com/uas/utils"
+    "reflect"
+    "strings"
     "time"
 )
 
@@ -46,6 +48,8 @@ func (this Entity) Select(where map[string]interface{}, fields ...string) []inte
     utils.HandleErr("[Entity.Select] Exec: ", err)
 
     columns, err := rows.Columns()
+    utils.HandleErr("[Entity.Select] Columns: ", err)
+
     row := make([]interface{}, len(columns))
     values := make([]interface{}, len(columns))
     for i, _ := range row {
@@ -63,7 +67,7 @@ func (this Entity) Select(where map[string]interface{}, fields ...string) []inte
         record := make(map[string]interface{}, len(values))
         for i, col := range values {
             if col != nil {
-                //fmt.Printf("\n%s: type= %s\n", columns[i], reflect.TypeOf(col))
+                fmt.Printf("\n%s: type= %s\n", columns[i], reflect.TypeOf(col))
                 switch col.(type) {
                 default:
                     utils.HandleErr("Entity.Select: Unexpected type.", nil)
@@ -79,6 +83,8 @@ func (this Entity) Select(where map[string]interface{}, fields ...string) []inte
                     record[columns[i]] = col.(string)
                 case []byte:
                     record[columns[i]] = string(col.([]byte))
+                case []int8:
+                    record[columns[i]] = col.([]string)
                 case time.Time:
                     record[columns[i]] = col
                 }
@@ -119,4 +125,30 @@ func (this Entity) Delete(field string, params []interface{}) {
     defer connect.DBClose(db, stmt)
     _, err = stmt.Exec(params...)
     utils.HandleErr("[Entity.Delete] Exec: ", err)
+}
+
+func CreateBlank(id string) {
+    db := connect.DBConnect()
+    defer connect.DBClose(db)
+    base := new(ModelManager)
+    model := base.Users()
+    n := len(model.UserColumns)
+    query := "CREATE TABLE IF NOT EXISTS blank_" + id + "("
+    for i := 0; i < n; i++ {
+        query += model.UserColumns[i] + " " + model.Fields[model.UserColumns[i]].Type + ", "
+    }
+    query = query[0:len(query)-2] + ");"
+    fmt.Println("[DBCreateBlank]: Create table", query)
+    _, err := db.Exec(query)
+    utils.HandleErr("[Connect.DBCreateBlank]: Exec", err)
+
+    blanks := base.Blanks()
+    blanks.Insert(
+        blanks.Columns[1:],
+        []interface{}{
+            "blank_" + id,
+            id,
+            "{" + strings.Join(model.UserColumns[1:], ",") + "}",
+            "{" + strings.Join(model.UserColNames[1:], ",") + "}",
+            "{" + strings.Join(model.UserTypes[1:], ",") + "}"})
 }

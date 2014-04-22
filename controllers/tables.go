@@ -149,6 +149,11 @@ func (this *Handler) Edit(tableName string) {
         break
     case "add":
         model.Insert(model.Columns[1:], params)
+        if tableName == "Contests" {
+            id := connect.DBGetLastInsertedId(tableName)
+            models.CreateBlank(id)
+            fmt.Println("last inserted id: ", id)
+        }
         break
     case "del":
         ids := strings.Split(this.Request.FormValue("id"), ",")
