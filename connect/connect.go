@@ -34,7 +34,7 @@ func DBClose(comps ...DBComps) {
 func DBInitSchema() {
     db := DBConnect()
     defer DBClose(db)
-    querty := `CREATE TABLE IF NOT EXISTS users (
+    query := `CREATE TABLE IF NOT EXISTS users (
                     id       serial       NOT NULL PRIMARY KEY,
                     login    varchar(32)  NOT NULL UNIQUE,
                     password varchar(128) NOT NULL,
@@ -63,9 +63,12 @@ func DBInitSchema() {
     _, err = db.Exec(query)
     utils.HandleErr("[Connect.InitSchema.Contests]: ", err)
     query = `CREATE TABLE IF NOT EXISTS blanks (
-                    id          serial       NOT NULL PRIMARY KEY,
-                    name        varchar(128) NOT NULL UNIQUE,
-                    contest_id  int          NOT NULL REFERENCES contests (id)
+                    id          serial        NOT NULL PRIMARY KEY,
+                    name        varchar(128)  NOT NULL UNIQUE,
+                    contest_id  int           NOT NULL REFERENCES contests (id) ON DELETE CASCADE,
+                    columns     varchar(32)[],
+                    colNames    varchar(32)[],
+                    types       varchar(32)[]
                 );`
     _, err = db.Exec(query)
     utils.HandleErr("[Connect.InitSchema.Contests]: ", err)
