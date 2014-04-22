@@ -83,6 +83,9 @@ func (this *Handler) Select(tableName string) {
     case "Contests":
         model = base.Contests().Entity
         break
+    case "Blanks":
+        model = base.Blanks().Entity
+        break
     }
     answer := model.Select(nil, model.Columns...)
     tmp, err := template.ParseFiles(
@@ -126,12 +129,15 @@ func (this *Handler) Edit(tableName string) {
     case "Contests":
         model = base.Contests().Entity
         break
+    case "Blanks":
+        model = base.Blanks().Entity
+        break
     }
 
     params := make([]interface{}, len(model.Columns)-1)
     for i := 0; i < len(model.Columns)-1 && this.Request.FormValue(model.Columns[i+1]) != ""; i++ {
         if model.Columns[i+1] == "date" {
-            params[i] = this.Request.FormValue(model.Columns[i+1])[0:10] 
+            params[i] = this.Request.FormValue(model.Columns[i+1])[0:10]
         } else {
             params[i] = this.Request.FormValue(model.Columns[i+1])
         }
