@@ -96,6 +96,27 @@ func DBInitSchema() {
     _, err = db.Exec(query)
     utils.HandleErr("[Connect.InitSchema.del_elem_by_index]: ", err)
 
+    query = `CREATE OR REPLACE FUNCTION del_null_from_arr(anyarray)
+              RETURNS anyarray AS
+            $BODY$ 
+                declare
+                    arr_ $1%type;
+                    idx_ int;
+                begin
+                    for idx_ in array_lower($1, 1)..array_upper($1, 1) loop
+                        if not $1[idx_] = '' then
+                            arr_ = array_append(arr_, $1[idx_]);
+                        end if;
+                    end loop;
+                    return arr_;
+                end;
+            $BODY$
+              LANGUAGE plpgsql VOLATILE
+                COST 100;
+            ALTER FUNCTION del_null_from_arr(anyarray)
+                  OWNER TO admin;`
+    _, err = db.Exec(query)
+    utils.HandleErr("[Connect.InitSchema.del_null_from_arr]: ", err)
 }
 
 func DBGetLastInsertedId(tableName string) string {
