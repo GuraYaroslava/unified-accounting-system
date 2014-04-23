@@ -119,7 +119,7 @@ func (this *Handler) Index() {
         fmt.Fprintf(this.Response, "%s", response)
         break
 
-    case "editBlank":
+    case "editBlanks":
         id := data["id"].(string)
         inf := data["data"].([]interface{})
 
