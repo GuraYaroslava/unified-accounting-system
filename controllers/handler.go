@@ -264,5 +264,32 @@ func (this *Handler) Index() {
         utils.HandleErr("[Handler.Index->editBlank] Prepare: ", err)
         _, err = stmt.Exec()
         utils.HandleErr("[Handler.Index->editBlank] Exec: ", err)
+        break
+
+    case "addBlank":
+        id := data["id"].(string)
+        inf := data["data"].([]interface{})
+        fmt.Println("inf: ", inf)
+
+        columns := connect.DBGetColumnNames("blank_" + id)
+        var fields []interface{}
+
+        for i := 0; i < len(inf); i++ {
+            field := inf[i].(map[string]interface{})
+            fields = append(fields, field["value"].(string))
+        }
+
+        query := connect.DBInsert("blank_"+id, columns[1:])
+        db := connect.DBConnect()
+        stmt, err := db.Prepare(query)
+        defer connect.DBClose(db, stmt)
+        utils.HandleErr("[addBlank] Prepare: ", err)
+        _, err = stmt.Exec(fields...)
+        utils.HandleErr("[addBlank] Exec: ", err)
+
+        ans := map[string]interface{}{"response": "ok"}
+        res, err := json.Marshal(ans)
+        utils.HandleErr("[Handle.Index] json.Marshal: ", err)
+        fmt.Fprintf(this.Response, "%s", string(res))
     }
 }
