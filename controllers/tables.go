@@ -167,7 +167,7 @@ func (this *Handler) Edit(tableName string) {
     }
 }
 
-func (this *Handler) BlankShow(id string) {
+func (this *Handler) EditBlank(id string) {
     base := new(models.ModelManager)
     blanks := base.Blanks()
 
