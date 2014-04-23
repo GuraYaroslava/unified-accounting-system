@@ -179,13 +179,39 @@ func (this *Handler) EditBlank(id string) {
     t := types[0].(map[string]interface{})
 
     tmp, err := template.ParseFiles(
-        "../uas/view/blank.html",
+        "../uas/view/edit_blank.html",
+        "../uas/view/header.html",
+        "../uas/view/footer.html")
+    utils.HandleErr("[Handler.EditBlank] template.ParseFiles: ", err)
+    err = tmp.ExecuteTemplate(this.Response, "edit_blank", Model{
+        Id:       id,
+        Columns:  utils.ArrayStringToInterface(strings.Split(cl["columns"].(string), ",")),
+        ColNames: utils.ArrayStringToInterface(strings.Split(cln["colnames"].(string), ",")),
+        Types:    utils.ArrayStringToInterface(strings.Split(t["types"].(string), ","))})
+    utils.HandleErr("[Handler.EditBlank] tmp.Execute: ", err)
+}
+
+func (this *Handler) ShowBlank(id string) {
+    base := new(models.ModelManager)
+    blanks := base.Blanks()
+
+    columns := blanks.Select(map[string]interface{}{"contest_id": id}, "columns")
+    cl := columns[0].(map[string]interface{})
+    colNames := blanks.Select(map[string]interface{}{"contest_id": id}, "colnames")
+    cln := colNames[0].(map[string]interface{})
+    types := blanks.Select(map[string]interface{}{"contest_id": id}, "types")
+    t := types[0].(map[string]interface{})
+
+    caption := blanks.Select(map[string]interface{}{"contest_id": id}, "name")[0].(map[string]interface{})["name"].(string)
+
+    tmp, err := template.ParseFiles(
+        "../uas/view/show_blank.html",
         "../uas/view/header.html",
         "../uas/view/footer.html")
     utils.HandleErr("[Handler.BlankShow] template.ParseFiles: ", err)
-
-    err = tmp.ExecuteTemplate(this.Response, "blank", Model{
+    err = tmp.ExecuteTemplate(this.Response, "show_blank", Model{
         Id:       id,
+        Caption:  caption,
         Columns:  utils.ArrayStringToInterface(strings.Split(cl["columns"].(string), ",")),
         ColNames: utils.ArrayStringToInterface(strings.Split(cln["colnames"].(string), ",")),
         Types:    utils.ArrayStringToInterface(strings.Split(t["types"].(string), ","))})
