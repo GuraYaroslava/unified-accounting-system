@@ -45,7 +45,7 @@ function(auth, utils) {
         for (i in data) {
             $("<a/>", {
                 text: data[i].name,
-                href: "/",//+data[i].id
+                href: "/handler/ShowBlank/"+data[i].id,
                 class: "form-row",
             }).appendTo("div#list-contests");
         }
