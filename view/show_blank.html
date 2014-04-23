@@ -1,0 +1,136 @@
+﻿{{define "show_blank"}}
+{{template "header"}}
+
+<script type="text/javascript"
+        src="/js/kladr.js"></script>
+
+</br>
+</br>
+<div id="content">
+    <div id="title"></div>
+    <form></form>
+    <div id="server-answer"></div>
+</div>
+
+<script>
+require(["utils"],
+function(utils) {
+    var id        = "{{.Id}}";
+    var caption   = "{{.Caption}}";
+    var columns   = "{{.Columns}}".slice(2, -2).split(" ");
+    var colNames  = "{{.ColNames}}".slice(2, -2).split(" ");
+    var types     = '{{.Types}}'.slice(2, -2).split(" ");
+    var valid     = true;
+
+    $("#title").text(caption);
+
+    console.log(columns);
+    console.log(colNames);
+    console.log(types);
+
+    var js = {
+        "action": "addBlank",
+        "data": getFormData(),
+        "id": id
+    };
+
+    for (var i = 0; i < types.length; i++) {
+        console.log(types[i]);
+        var type = "input";
+        var start = types[i].indexOf("(");
+        var end = types[i].indexOf(")");
+
+        console.log(types[i]);
+        console.log(start);
+        console.log(end);
+
+        var length = types[i].slice(start+1, end);
+        console.log(length);
+
+        if (types[i].indexOf("[]") != -1) {
+            /*type = "select";
+            alert("select");*/
+
+        } else if (types[i] == "date") {
+            /*type = "date";
+            alert("date");*/
+        }
+        addField(columns[i], colNames[i], type, length);
+    }
+
+    kladr();
+
+    var input = $("<input/>", {
+        type: "button",
+        value: "Отправить",
+        id: "send-btn",
+        name: "submit"
+    }).appendTo("form");
+
+    $("#send-btn").click(function() {
+        var js = {
+            "action": "addBlank",
+            "data": getFormData(),
+            "id": id
+        };
+        if (valid == true) {
+            utils.postRequest(js, function(data) {
+                $("#server-answer").text("Анкета отправлена.").css("color", "green");
+            }, "/handler")
+        } else {
+            $("#server-answer").text("Неверно заполнены поля.").css("color", "red");
+        }
+    });
+
+    $("<input/>", {
+        type: "button",
+        value: "Назад",
+        id: "back-btn",
+        name: "submit",
+    }).appendTo("#content");
+
+    $("#back-btn").click(function() {
+        history.back();
+    });
+
+    function addField(DBfieldName, fieldName, type, length) {
+        var div = $("<div/>", {
+            class: "field"
+        });
+        var lable = $("<label/>", {
+            for: DBfieldName,
+            id: "label-" + DBfieldName
+        });
+        var field_;
+        switch (type) {
+            case "input":
+                field_ = $("<input/>", {
+                    id: DBfieldName,
+                    name: DBfieldName,
+                    type: "text"
+                });
+                break
+            case "select":
+                /*<select/>*/
+                break
+            case "date":
+                /*<input/>*/
+                break
+        }
+
+        $(div).append(lable).append(field_)
+        $("form").append(div);
+        $("#label-" + DBfieldName).text(fieldName);
+    }
+
+    function getFormData() {
+        console.log("getData");
+        console.log($("form").serializeArray());
+        return $("form").serializeArray();
+    }
+
+})
+</script>
+
+{{template "footer"}}
+{{end}}
