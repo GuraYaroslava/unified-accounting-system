@@ -142,11 +142,14 @@ func CreateBlank(id string) {
     _, err := db.Exec(query)
     utils.HandleErr("[Connect.DBCreateBlank]: Exec", err)
 
+    contests := base.Contests()
+    name := contests.Select(map[string]interface{}{"id": id}, "name")
+
     blanks := base.Blanks()
     blanks.Insert(
         blanks.Columns[1:],
         []interface{}{
-            "blank_" + id,
+            name[0].(map[string]interface{})["name"].(string),
             id,
             "{" + strings.Join(model.UserColumns[1:], ",") + "}",
             "{" + strings.Join(model.UserColNames[1:], ",") + "}",
