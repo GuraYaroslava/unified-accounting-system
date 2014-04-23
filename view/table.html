@@ -1,6 +1,7 @@
 {{define "edit"}}
 {{template "header"}}
-
+</br>
+</br>
 <div id="container">
     <table id="grid-table"></table>
     <div id="grid-table-pager"></div>
@@ -8,7 +9,7 @@
 
 <script type="text/javascript">
     $("#logout-btn").css("visibility", "visible");
-    var jsData    = "["
+    var jsData    = "[";
     var colNames_ = "{{.ColNames}}".slice(1, -1).split(" ");
     var tableName = "{{.TableName}}";
     var colModel_ = [];
