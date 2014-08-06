@@ -154,6 +154,16 @@ function(utils) {
         $("form").append(block_);
         $("#label-" + DBfieldName).text("Название");
 
+        $("#" + DBfieldName).blur(function() {
+            if ($(this).val() != ""){
+                valid = true;
+                $(this).css({"border": "2px solid green"});
+            } else {
+                valid = false;
+                $(this).css({"border": "2px solid red"});
+            }
+        });
+
         $("#length-" + DBfieldName).blur(function() {
             var pattern = /^[0-9]+$/i;
             if (pattern.test($(this).val())){

@@ -12,9 +12,26 @@
     <div id="server-answer"></div>
 </div>
 
+<script type="text/javascript">
+    var data = {};
+    var valid = true;
+</script>
+
+{{with .Table}}
+    {{range $index, $elmt := .}}
+        {{range $i, $v := $elmt}}
+            <script type="text/javascript">
+                    data["{{$i}}"]= "{{$v}}";
+            </script>
+        {{end}}
+    {{end}}
+{{end}}
+
 <script>
 require(["utils"],
 function(utils) {
+    //console.log("data");
+    //console.log(data);
     var id        = "{{.Id}}";
     var caption   = "{{.Caption}}";
     var columns   = "{{.Columns}}".slice(2, -2).split(" ");
@@ -108,7 +125,7 @@ function(utils) {
                     id: DBfieldName,
                     name: DBfieldName,
                     type: "text"
-                });
+                }).val(data[DBfieldName]);
                 break
             case "select":
                 /*<select/>*/
